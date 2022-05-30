@@ -1,8 +1,8 @@
 package Program;
 
 
-/**
- * @author Nazrin
+/*
+  @author Nazrin
  * This class is used to handle ALL operations involving spam checking. Definitions for spam and conditions which merit a confession post
  * to BE a spam will be explained further
  */
@@ -11,7 +11,10 @@ import Program.Confession.ConfessionPost;
 import Program.Compare.*;
 
 import java.lang.reflect.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Spam is defined as :
@@ -33,7 +36,7 @@ import java.util.ArrayList;
  */
 
 public class SpamChecking {
-    public static void checkForRepetitiveContent(ArrayList<ConfessionPost> confessionPostArrayList, ConfessionPost confessionPost){
+    public static boolean checkForRepetitiveContent(ArrayList<ConfessionPost> confessionPostArrayList, ConfessionPost confessionPost){
         int maxBeforeSpam = 2;
         ArrayList<ConfessionPost> repetitivePosts = new ArrayList<>();
 
@@ -47,15 +50,42 @@ public class SpamChecking {
                 for (int j = 0; j < repetitivePosts.size(); j++) {
                     System.out.println((j + 1) + ") " + repetitivePosts.get(j).getConfessionID());
                 }
-                return;
+                return true;
             }
         }
 
-        checkForTimeInterval(repetitivePosts);
+        if(repetitivePosts.size() == 0){
+            return false;
+        }
+        else{
+            return validTimeInterval(repetitivePosts, confessionPost, 15);
+        }
     }
 
-    public static void checkForTimeInterval(ArrayList<ConfessionPost> confessionPosts){
-        ConfessionPost mostRecent;
+    public static boolean validTimeInterval(ArrayList<ConfessionPost> repetitivePosts, ConfessionPost repeatedPost, int delayInMin){
+        ConfessionPost mostRecent = repetitivePosts.get(0);
+
+        for(int i = 1; i < repetitivePosts.size(); i++){
+            mostRecent = mostRecentPost(mostRecent, repetitivePosts.get(i));
+        }
+        long seconds = 0;
+
+        try{
+            Date date1 = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").parse(mostRecent.getPublishedDate() + " " + mostRecent.getPublishedTime());
+            Date date2 = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").parse(repeatedPost.getPublishedDate() + " " + repeatedPost.getPublishedTime());
+
+            seconds = (date1.getTime() - date2.getTime())/1000;
+        } catch(ParseException e){
+            e.printStackTrace();
+        }
+
+        if((int)seconds < (delayInMin*60)){
+            System.out.println("Post spamming detected!!! Please try again later!!");
+            return false;
+        }
+        else{
+            return true;
+        }
 
 
     }
