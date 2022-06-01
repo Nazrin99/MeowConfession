@@ -6,11 +6,11 @@ import Program.Compare.DateCompare;
 import Program.Compare.TimeCompare;
 import Program.Utility.Regex;
 
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.sql.*;
 
 public class ConfessionPost {
     private String confessionID;
@@ -42,7 +42,7 @@ public class ConfessionPost {
         this.confessionID = giveConfessionID();
     }
 
-    //Only used for calling from database
+    //Only used for calling from database for display
     public ConfessionPost(String confessionID, String confessionContent, String publishedDate, String publishedTime, String replyToID, String repliesFromID) {
         this.confessionID = confessionID;
         this.publishedDate = publishedDate;
@@ -53,6 +53,14 @@ public class ConfessionPost {
         findGreatestID(confessionID);
     }
 
+    //Only used to create objects after being reviewed and approved by admin
+    public ConfessionPost(String confessionID, String confessionContent, String publishedDate, String publishedTime, String replyToID){
+        this.confessionID = confessionID;
+        this.publishedDate = publishedDate;
+        this.publishedTime = publishedTime;
+        this.confessionContent = confessionContent;
+        this.replyToID = replyToID;
+    }
 
     public String getConfessionID() {
         return confessionID;
