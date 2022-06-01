@@ -8,9 +8,7 @@ package Program;
  */
 
 import Program.Confession.ConfessionPost;
-import Program.Compare.*;
 
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -90,29 +88,25 @@ public class SpamChecking {
 
     }
 
-    private static ConfessionPost mostRecentPost(ConfessionPost confessionPost, ConfessionPost confessionPost2){
-        if(DateCompare.GTOETDate(confessionPost.getPublishedDate(), confessionPost2.getPublishedDate()) && !(DateCompare.STOETDate(confessionPost.getPublishedDate(), confessionPost2.getPublishedDate()))){
-            //Both confessions' dates are different, confessionPost is the more recent post
-            return confessionPost;
-        }
-        else if(DateCompare.STOETDate(confessionPost.getPublishedDate(), confessionPost2.getPublishedDate()) && !(DateCompare.GTOETDate(confessionPost.getPublishedDate(), confessionPost2.getPublishedDate()))){
-            //Both confessions' dates are different, confessionPost is the older post
-            return confessionPost2;
-        }
-        else{
-            //Both confessions' have the same dates
-            if(TimeCompare.GTOETTime(confessionPost.getPublishedTime(),confessionPost2.getPublishedTime()) && !(TimeCompare.STOETTime(confessionPost.getPublishedTime(), confessionPost2.getPublishedTime()))){
-                //Both confessions' have same dates but different published time, confessionPost is the more recent post
-                return confessionPost;
-            }
-            else if(TimeCompare.STOETTime(confessionPost.getPublishedTime(), confessionPost2.getPublishedTime()) && !(TimeCompare.GTOETTime(confessionPost.getPublishedTime(), confessionPost2.getPublishedTime()))){
-                //Both confessions have same dates but different published time, confessionPost2 is the older post
+    private static ConfessionPost mostRecentPost(ConfessionPost confessionPost, ConfessionPost confessionPost2) {
+        long seconds;
+
+        try {
+            Date date1 = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").parse(confessionPost.getPublishedDate() + " " + confessionPost.getPublishedTime());
+            Date date2 = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").parse(confessionPost2.getPublishedDate() + " " + confessionPost2.getPublishedTime());
+
+            seconds = (date1.getTime() - date2.getTime()) / 1000;
+
+            if ((int) seconds < 0) {
                 return confessionPost2;
-            }
-            else{
-                //Both confessions have the same dates and published times
+            } else if ((int) seconds > 0) {
+                return confessionPost;
+            } else {
                 return confessionPost;
             }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+        return confessionPost;
     }
 }
