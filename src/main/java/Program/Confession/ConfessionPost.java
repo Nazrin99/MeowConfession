@@ -21,6 +21,7 @@ public class ConfessionPost {
     private String publishedDate;
     private String publishedTime;
     private String confessionContent;
+    private byte[] postImage = null;
     private static int largestID = 3000;
 
     //Creating confession that is not replying to any other posts
@@ -137,6 +138,14 @@ public class ConfessionPost {
 
     public void setRepliesFromID(ArrayList<String> repliesFromID) {
         this.repliesFromID = repliesFromID;
+    }
+
+    public byte[] getPostImage() {
+        return postImage;
+    }
+
+    public void setPostImage(byte[] postImage) {
+        this.postImage = postImage;
     }
 
     @Override
