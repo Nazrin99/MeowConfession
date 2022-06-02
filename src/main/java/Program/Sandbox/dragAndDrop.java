@@ -1,6 +1,5 @@
-package Program.Confession;
+package Program.Sandbox;
 
-import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -11,9 +10,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class Sandbox extends Application {
-
-    @Override
+public class dragAndDrop{
     public void start(Stage primaryStage) {
         Label label = new Label("Drag a file to me.");
         Label dropped = new Label("");
@@ -39,7 +36,8 @@ public class Sandbox extends Application {
                 Dragboard db = event.getDragboard();
                 boolean success = false;
                 if (db.hasFiles()) {
-                    dropped.setText(db.getFiles().toString());
+                    String url = db.getFiles().toString();
+                    dropped.setText(url);
                     success = true;
                 }
                 /* let the source know whether the string was successfully
@@ -64,8 +62,5 @@ public class Sandbox extends Application {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        launch(args);
-    }
 
 }
