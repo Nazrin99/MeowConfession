@@ -1,24 +1,19 @@
 package com;
 
-import javafx.fxml.FXML;
-
+import Program.Sandbox.dragAndDrop;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import java.awt.*;
+import javafx.stage.Stage;
 
-import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.Buffer;
-
-import Program.Confession.*;
-import javafx.stage.Stage;
 
 public class HelloController {
 
@@ -30,8 +25,8 @@ public class HelloController {
 
     @FXML
     void viewImageButtonClicked(ActionEvent event) throws FileNotFoundException {
-        Sandbox sandbox = new Sandbox();
-        Class class1 = sandbox.getClass();
+        dragAndDrop dragAndDrop = new dragAndDrop();
+        Class class1 = dragAndDrop.getClass();
 
         URL url = class1.getResource("MOHAMMADNAZRIN_AI.jpg");
 

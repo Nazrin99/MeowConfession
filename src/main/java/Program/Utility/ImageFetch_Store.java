@@ -36,17 +36,33 @@ public class ImageFetch_Store {
         }
     }
 
+    public static void insertImagePathToSQL(String confessionID, String filePath) throws IOException {
+
+        try{
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ds", "root", "CinemaFOP");
+            PreparedStatement preparedStatement1 = connection.prepareStatement("INSERT INTO imagespath VALUES(?,?);");
+            preparedStatement1.setString(1,confessionID);
+            preparedStatement1.setString(2,filePath);
+            preparedStatement1.execute();
+            connection.close();
+            System.out.println("Image Stored");
+
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
     public static void getImageFromSQL(String imageID, String imageFormat, String filePath) throws IOException{
         byte[] data = null;
 
         try{
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ds", "root", "CinemaFOP");
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM images WHERE id = '"+imageID+"';");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM images WHERE id = ?;");
+            preparedStatement.setString(1, imageID);
             ResultSet resultSet = preparedStatement.executeQuery();
-            System.out.println(resultSet.getRow());
 
             while(resultSet.next()){
-                data = resultSet.getBytes("idImages");
+                data = resultSet.getBytes(2);
             }
             resultSet.close();
             connection.close();
