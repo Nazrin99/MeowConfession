@@ -16,4 +16,8 @@ module com.example.confesstime {
     opens Program.Utility to javafx.fxml;
     exports com;
     opens com to javafx.fxml;
+    exports Program.AdminUtility;
+    opens Program.AdminUtility to javafx.fxml;
+    exports Program.Sandbox;
+    opens Program.Sandbox to javafx.fxml;
 }
