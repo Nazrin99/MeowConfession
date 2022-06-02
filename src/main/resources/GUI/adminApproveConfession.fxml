@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="810.0" prefWidth="1315.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.adminApproveConfession">
+   <children>
+      <BorderPane layoutX="6.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <left>
+            <VBox prefHeight="200.0" prefWidth="435.0" style="-fx-background-color: aliceblue;" styleClass="right-bar" stylesheets="@styles.css" BorderPane.alignment="CENTER">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="110.0" prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="49.0" prefWidth="128.0" text="Meow" textFill="#878787">
+                           <font>
+                              <Font name="Cambria Bold" size="40.0" />
+                           </font>
+                        </Label>
+                        <Label text="Confession" textFill="#f2a2a2">
+                           <font>
+                              <Font name="Bradley Hand ITC" size="40.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="65.0" prefWidth="200.0" stylesheets="@styles.css" VBox.vgrow="NEVER">
+                     <VBox.margin>
+                        <Insets left="30.0" right="30.0" />
+                     </VBox.margin>
+                     <children>
+                        <TextField prefHeight="40.0" prefWidth="235.0" promptText="Type here to search" styleClass="transparent" stylesheets="@styles.css">
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font name="Cambria" size="18.0" />
+                           </font>
+                        </TextField>
+                        <Button mnemonicParsing="false" onAction="#searchButton" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: aliceblue;" styleClass="search-box" stylesheets="@styles.css" text="Search" />
+                     </children>
+                     <styleClass>
+                        <String fx:value="search-box" />
+                        <String fx:value="shadow" />
+                     </styleClass>
+                  </HBox>
+                  <Pane prefHeight="57.0" prefWidth="435.0" VBox.vgrow="ALWAYS" />
+                  <VBox fx:id="chosenFruitCard" alignment="CENTER" prefHeight="535.0" prefWidth="100.0" stylesheets="@styles.css">
+                     <VBox.margin>
+                        <Insets left="50.0" right="50.0" />
+                     </VBox.margin>
+                     <children>
+                        <HBox prefHeight="30.0" prefWidth="315.0">
+                           <children>
+                              <Label fx:id="idConfessLabel" prefHeight="18.0" prefWidth="294.0" text="UM2000">
+                                 <font>
+                                    <Font name="Cambria" size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="20.0" top="30.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <Label fx:id="captionLabel" prefHeight="90.0" prefWidth="261.0" text="caption">
+                           <font>
+                              <Font name="Cambria" size="18.0" />
+                           </font>
+                        </Label>
+                        <ImageView fx:id="fruitImg" fitHeight="170.0" fitWidth="285.0" pickOnBounds="true" preserveRatio="true">
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </ImageView>
+                        <HBox alignment="CENTER" prefHeight="53.0" prefWidth="335.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#approveButton" stylesheets="@styles.css" text="Approve" textFill="WHITE">
+                                 <font>
+                                    <Font name="Perpetua Bold" size="18.0" />
+                                 </font>
+                                 <styleClass>
+                                    <String fx:value="button-background" />
+                                    <String fx:value="round-button" />
+                                 </styleClass>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="45.0" prefWidth="200.0">
+                           <VBox.margin>
+                              <Insets bottom="20.0" top="20.0" />
+                           </VBox.margin>
+                           <children>
+                              <Separator prefHeight="0.0" prefWidth="118.0" />
+                              <Label alignment="CENTER" prefHeight="45.0" prefWidth="64.0" text="or">
+                                 <font>
+                                    <Font name="Cambria" size="24.0" />
+                                 </font>
+                              </Label>
+                              <Separator prefHeight="0.0" prefWidth="118.0" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="53.0" prefWidth="335.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#rejectButton" stylesheets="@styles.css" text="Reject" textFill="#fffefe">
+                                 <font>
+                                    <Font name="Perpetua Bold" size="18.0" />
+                                 </font>
+                                 <styleClass>
+                                    <String fx:value="button-background" />
+                                    <String fx:value="round-button" />
+                                 </styleClass>
+                              </Button>
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="41.0" prefWidth="335.0" />
+                     </children>
+                     <styleClass>
+                        <String fx:value="chosen-confession-card" />
+                        <String fx:value="shadow" />
+                     </styleClass>
+                  </VBox>
+                  <Pane prefHeight="57.0" prefWidth="435.0" VBox.vgrow="ALWAYS" />
+               </children>
+            </VBox>
+         </left>
+         <center>
+            <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="65.0" prefWidth="200.0" style="-fx-background-color: white;">
+                     <VBox.margin>
+                        <Insets left="20.0" right="20.0" />
+                     </VBox.margin>
+                     <children>
+                        <Label prefHeight="29.0" prefWidth="88.0" text="language" textFill="#878787">
+                           <font>
+                              <Font name="Cambria Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label prefHeight="29.0" prefWidth="77.0" text="English" textFill="#878787" underline="true">
+                           <font>
+                              <Font name="Cambria" size="18.0" />
+                           </font>
+                        </Label>
+                        <Pane prefHeight="65.0" prefWidth="393.0" style="-fx-background-color: white;" HBox.hgrow="ALWAYS" />
+                        <Label prefHeight="62.0" prefWidth="100.0" text="My Account" textFill="#878787">
+                           <font>
+                              <Font name="Cambria" size="18.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="50.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                        </ImageView>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: biqsue;">
+                     <children>
+                        <Pane prefHeight="84.0" prefWidth="96.0" />
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="380.0" styleClass="dashboard-card" stylesheets="@styles.css">
+                           <children>
+                              <VBox alignment="CENTER" prefHeight="100.0" prefWidth="254.0">
+                                 <children>
+                                    <Button mnemonicParsing="false" onAction="#dashboardButtonClicked" prefHeight="59.0" prefWidth="194.0" stylesheets="@styles.css" text="Dashboard">
+                                       <font>
+                                          <Font name="Bodoni MT Bold" size="18.0" />
+                                       </font>
+                                       <styleClass>
+                                          <String fx:value="reactions-container" />
+                                          <String fx:value="transparent" />
+                                       </styleClass>
+                                    </Button>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <Pane prefHeight="84.0" prefWidth="96.0" HBox.hgrow="ALWAYS" />
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="336.0" styleClass="shopping-online-card" stylesheets="@styles.css">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#confessiomButtonClicked" prefHeight="59.0" prefWidth="177.0" stylesheets="@styles.css" text="Confession">
+                                 <font>
+                                    <Font name="Bodoni MT Bold" size="18.0" />
+                                 </font>
+                                 <styleClass>
+                                    <String fx:value="reactions-container" />
+                                    <String fx:value="transparent" />
+                                 </styleClass>
+                              </Button>
+                           </children>
+                        </HBox>
+                        <Pane prefHeight="84.0" prefWidth="96.0" />
+                     </children>
+                     <VBox.margin>
+                        <Insets left="20.0" right="20.0" top="10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white;" VBox.vgrow="ALWAYS">
+                     <children>
+                        <ScrollPane fx:id="scroll" prefHeight="625.0" prefWidth="435.0" style="-fx-background-color: aliceblue;" stylesheets="@styles.css">
+                           <content>
+                              <VBox fx:id="grid" alignment="CENTER" prefHeight="0.0" prefWidth="0.0" style="-fx-background-color: aliceblue;" styleClass="features-background" stylesheets="@styles.css">
+
+                              </VBox>
+                           </content>
+                           <HBox.margin>
+                              <Insets top="10.0" />
+                           </HBox.margin>
+                           <styleClass>
+                              <String fx:value="transparent" />
+                              <String fx:value="scroll-background" />
+                              <String fx:value="post-background" />
+                           </styleClass>
+                        </ScrollPane>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>

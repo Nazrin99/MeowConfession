@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="573.0" prefWidth="600.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.reportFormController">
+   <top>
+      <HBox alignment="CENTER" prefHeight="108.0" prefWidth="600.0" spacing="20.0" style="-fx-background-color: bisque;" styleClass="reactions-container" stylesheets="@styles.css" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="60.0" fitWidth="53.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@icon/exclamation-mark.png" />
+               </image>
+            </ImageView>
+            <Label prefHeight="36.0" prefWidth="130.0" style="-fx-background-color: #FF0000;" styleClass="post-background" text="  Report Form" textFill="WHITE">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+               <font>
+                  <Font name="Arial Bold Italic" size="18.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="58.0" fitWidth="51.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@icon/exclamation-mark.png" />
+               </image>
+            </ImageView>
+         </children>
+         <BorderPane.margin>
+            <Insets top="10.0" />
+         </BorderPane.margin>
+      </HBox>
+   </top>
+   <center>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER" prefHeight="42.0" prefWidth="600.0">
+               <children>
+                  <Label fx:id="username" prefHeight="26.0" prefWidth="439.0" text="Please be respectful when submitting your report! Thank you">
+                     <HBox.margin>
+                        <Insets right="20.0" top="20.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="580.0" spacing="10.0">
+               <children>
+                  <Label prefHeight="27.0" prefWidth="119.0" text="Problems :">
+                     <font>
+                        <Font name="Arial" size="15.0" />
+                     </font>
+                  </Label>
+                  <ChoiceBox fx:id="reportCategory" prefHeight="25.0" prefWidth="295.0" style="-fx-background-color: aliceblue;" />
+               </children>
+               <VBox.margin>
+                  <Insets left="20.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="59.0" prefWidth="580.0" spacing="10.0" VBox.vgrow="NEVER">
+               <children>
+                  <Label prefHeight="27.0" prefWidth="289.0" text="  Which confession do you want to report?">
+                     <font>
+                        <Font name="Bell MT" size="15.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="confessionID" promptText="Example: UM03000" />
+               </children>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </HBox>
+            <VBox alignment="CENTER_LEFT" prefHeight="304.0" prefWidth="600.0" spacing="10.0" VBox.vgrow="NEVER">
+               <children>
+                  <Label text="Why?">
+                     <VBox.margin>
+                        <Insets left="20.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font name="Bell MT" size="15.0" />
+                     </font>
+                  </Label>
+                  <TextArea fx:id="reportReason" prefHeight="200.0" prefWidth="200.0" promptText="State your reasons here">
+                     <VBox.margin>
+                        <Insets left="20.0" right="20.0" />
+                     </VBox.margin>
+                  </TextArea>
+                  <HBox alignment="CENTER" prefHeight="26.0" prefWidth="600.0" spacing="10.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#cancelButtonClicked" style="-fx-background-color: white;" styleClass="reactions-container" stylesheets="@styles.css" text="Back" />
+                        <Button mnemonicParsing="false" onAction="#submitButtonClicked" style="-fx-background-color: white;" styleClass="reactions-container" stylesheets="@styles.css" text="Submit" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="47.0" prefWidth="600.0">
+                     <children>
+                        <Label fx:id="reportConfirmation" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

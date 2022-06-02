@@ -44,23 +44,25 @@ public class ConfessionPost {
     }
 
     //Only used for calling from database for display
-    public ConfessionPost(String confessionID, String confessionContent, String publishedDate, String publishedTime, String replyToID, String repliesFromID) {
+    public ConfessionPost(String confessionID, String confessionContent, String publishedDate, String publishedTime, String replyToID, String repliesFromID, byte[] postImage) {
         this.confessionID = confessionID;
         this.publishedDate = publishedDate;
         this.publishedTime = publishedTime;
         this.confessionContent = confessionContent;
         this.replyToID = replyToID;
         this.repliesFromID = giveRepliesFromID(repliesFromID);
+        this.postImage = postImage;
         findGreatestID(confessionID);
     }
 
     //Only used to create objects after being reviewed and approved by admin
-    public ConfessionPost(String confessionID, String confessionContent, String publishedDate, String publishedTime, String replyToID){
+    public ConfessionPost(String confessionID, String confessionContent, String publishedDate, String publishedTime, String replyToID, byte[] postImage){
         this.confessionID = confessionID;
         this.publishedDate = publishedDate;
         this.publishedTime = publishedTime;
         this.confessionContent = confessionContent;
         this.replyToID = replyToID;
+        this.postImage = postImage;
     }
 
     public String getConfessionID() {
@@ -172,7 +174,7 @@ public class ConfessionPost {
     private static String givePublishedTime() {
         LocalTime time = java.time.LocalTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        String publishedTime = time.format(formatter).toString();
+        String publishedTime = time.format(formatter);
 
         return publishedTime;
     }
@@ -180,7 +182,7 @@ public class ConfessionPost {
     private static String givePublishedDate() {
         LocalDate date = java.time.LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        String publishedDate = date.format(formatter).toString();
+        String publishedDate = date.format(formatter);
 
         return publishedDate;
     }
@@ -188,7 +190,7 @@ public class ConfessionPost {
     public static String giveConfessionID() {
         StringBuilder sb = new StringBuilder();
         sb.append("UM0");
-        sb.append(Integer.toString(largestID + 1));
+        sb.append(largestID + 1);
         setLargestID(largestID);
         largestID++;
 
@@ -248,7 +250,7 @@ public class ConfessionPost {
     }
 
     public static void findGreatestID(String confessionID) {
-        int ID = Integer.parseInt(confessionID.substring(3, confessionID.length()));
+        int ID = Integer.parseInt(confessionID.substring(3));
 
         if (ID > getLargestID()) {
             setLargestID(ID);
@@ -266,15 +268,15 @@ public class ConfessionPost {
     }
 
 
-    public static void initialize(ArrayList<ConfessionPost> arrayList) {
+    public static ArrayList<ConfessionPost> initialize() {
+        ArrayList<ConfessionPost> arrayList = new ArrayList<>();
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/confession", "root", "CinemaFOP");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/confession", "root", "MeowConfession");
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM confessionposts");
             ResultSet resultSet = preparedStatement.executeQuery();
-            ;
 
             while (resultSet.next()) {
-                arrayList.add(new ConfessionPost(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4), resultSet.getString(5), resultSet.getString("repliesFrom")));
+                arrayList.add(new ConfessionPost(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4), resultSet.getString(5), resultSet.getString(6), resultSet.getBytes(7)));
             }
             resultSet.close();
             connection.close();
@@ -287,11 +289,12 @@ public class ConfessionPost {
             arrayList.get(i).setRepliesFrom(giveRepliesFrom(arrayList.get(i), arrayList));
             arrayList.get(i).setReplyTo(giveReplyTo(arrayList.get(i), arrayList));
         }
+        return arrayList;
     }
 
     public static void wrapUp(ArrayList<ConfessionPost> arrayList) {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/confession", "root", "CinemaFOP");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/confession", "root", "MeowConfession");
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO confessionposts(confessionID,confessionContent,publishedDate, publishedTime, replyTo, repliesFrom) VALUES (?,?,?,?,?,?)");
             PreparedStatement preparedStatement1 = connection.prepareStatement("DELETE FROM confessionposts");
 
@@ -543,7 +546,7 @@ public class ConfessionPost {
                             sb.append("\n<B> View all posts replying to this confession");
                         }
                         sb.append("\n<Insert anything else to go to back>");
-                        System.out.print(sb.toString() + "\nAnswer: ");
+                        System.out.print(sb + "\nAnswer: ");
                         answer = s.nextLine();
 
                         if (answer.equalsIgnoreCase("A")) {

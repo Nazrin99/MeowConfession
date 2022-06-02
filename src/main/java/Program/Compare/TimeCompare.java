@@ -20,12 +20,7 @@ public class TimeCompare {
                 if(Integer.parseInt(postTime.substring(6)) > Integer.parseInt(startTime.substring(6))){
                     return true;
                 }
-                else if(Integer.parseInt(postTime.substring(6)) < Integer.parseInt(startTime.substring(6))){
-                    return false;
-                }
-                else{
-                    return true;
-                }
+                else return Integer.parseInt(postTime.substring(6)) >= Integer.parseInt(startTime.substring(6));
             }
         }
     }
@@ -48,12 +43,7 @@ public class TimeCompare {
                 if(Integer.parseInt(postTime.substring(6)) < Integer.parseInt(endTime.substring(6))){
                     return true;
                 }
-                else if(Integer.parseInt(postTime.substring(6)) > Integer.parseInt(endTime.substring(6))){
-                    return false;
-                }
-                else{
-                    return true;
-                }
+                else return Integer.parseInt(postTime.substring(6)) <= Integer.parseInt(endTime.substring(6));
             }
         }
     }

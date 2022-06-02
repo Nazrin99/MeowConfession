@@ -28,12 +28,7 @@ public class DateCompare {
                 if(Integer.parseInt(postDate.substring(0,2)) > Integer.parseInt(startDate.substring(0,2))){
                     return true;
                 }
-                else if(Integer.parseInt(postDate.substring(0,2)) < Integer.parseInt(startDate.substring(0,2))){
-                    return false;
-                }
-                else{
-                    return true;
-                }
+                else return Integer.parseInt(postDate.substring(0, 2)) >= Integer.parseInt(startDate.substring(0, 2));
             }
         }
     }
@@ -64,12 +59,7 @@ public class DateCompare {
                 if(Integer.parseInt(postDate.substring(0,2)) < Integer.parseInt(endDate.substring(0,2))){
                     return true;
                 }
-                else if(Integer.parseInt(postDate.substring(0,2)) > Integer.parseInt(endDate.substring(0,2))){
-                    return false;
-                }
-                else{
-                    return true;
-                }
+                else return Integer.parseInt(postDate.substring(0, 2)) <= Integer.parseInt(endDate.substring(0, 2));
             }
         }
     }

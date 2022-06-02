@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="717.0" prefWidth="563.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER" prefHeight="198.0" prefWidth="563.0" style="-fx-background-color: #072f5f;" VBox.vgrow="SOMETIMES">
+         <children>
+            <Label fx:id="repliesToLabel" textFill="WHITE">
+               <font>
+                  <Font name="Book Antiqua Bold" size="25.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <ScrollPane fx:id="repliesScrollPane" hbarPolicy="NEVER" prefHeight="739.0" prefWidth="563.0" VBox.vgrow="ALWAYS">
+         <content>
+            <VBox fx:id="repliesVBox" prefHeight="625.0" prefWidth="560.0" />
+         </content>
+      </ScrollPane>
+   </children>
+</VBox>

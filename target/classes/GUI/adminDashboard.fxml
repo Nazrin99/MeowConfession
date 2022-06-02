@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="624.0" prefWidth="719.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.AdminDashBoardController">
+   <top>
+      <AnchorPane prefHeight="62.0" prefWidth="700.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+         <children>
+            <Pane layoutX="101.0" layoutY="14.0" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ALICEBLUE;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <HBox alignment="TOP_RIGHT" layoutX="242.0" layoutY="-17.0" prefHeight="43.0" prefWidth="525.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
+               <children>
+                  <Label fx:id="username" text="Username" />
+               </children></HBox>
+            <Label fx:id="backMenu" layoutY="23.0" prefHeight="44.0" prefWidth="148.0" text="Meow Confession">
+               <font>
+                  <Font name="Bradley Hand ITC" size="15.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="38.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../icon/confesslogo.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+            <Label fx:id="Menu" layoutY="14.0" prefHeight="61.0" prefWidth="169.0" text="Meow Confession">
+               <font>
+                  <Font name="Bradley Hand ITC" size="15.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="38.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../icon/confesslogo.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+         </children>
+      </AnchorPane>
+   </top>
+   <left>
+      <AnchorPane fx:id="slider" prefHeight="362.0" prefWidth="176.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+         <children>
+            <VBox layoutX="38.0" layoutY="50.0" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: aliceblue;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
+               <children>
+                  <Button mnemonicParsing="false" prefHeight="38.0" prefWidth="176.0" style="-fx-background-color: transparent;" styleClass="sidebarItem" stylesheets="@styles.css">
+                     <font>
+                        <Font name="Bell MT Bold" size="15.0" />
+                     </font>
+                     <graphic>
+                        <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="126.0" styleClass="sidebarItem" stylesheets="@styles.css">
+                           <children>
+                              <ImageView fitHeight="22.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../icon/confessionicon.png" />
+                                 </image>
+                              </ImageView>
+                              <Label prefHeight="17.0" prefWidth="114.0" styleClass="sideBarItem" text="Dashboard">
+                                 <font>
+                                    <Font name="Bell MT Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </HBox>
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#confessionButtonClicked" prefHeight="38.0" prefWidth="176.0" style="-fx-background-color: transparent;" styleClass="sidebarItem" stylesheets="@styles.css">
+                     <font>
+                        <Font name="Bell MT Bold" size="15.0" />
+                     </font>
+                     <graphic>
+                        <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="126.0" styleClass="sidebarItem" stylesheets="@styles.css">
+                           <children>
+                              <ImageView fitHeight="22.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../icon/usericon.png" />
+                                 </image>
+                              </ImageView>
+                              <Label prefHeight="17.0" prefWidth="114.0" styleClass="sideBarItem" text="Confession">
+                                 <font>
+                                    <Font name="Bell MT Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </HBox>
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#bannedButtonClicked" prefHeight="38.0" prefWidth="176.0" style="-fx-background-color: transparent;" styleClass="sidebarItem" stylesheets="@styles.css">
+                     <font>
+                        <Font name="Bell MT Bold" size="15.0" />
+                     </font>
+                     <graphic>
+                        <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="126.0" styleClass="sidebarItem" stylesheets="@styles.css">
+                           <children>
+                              <ImageView fitHeight="22.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../icon/banned.png" />
+                                 </image>
+                              </ImageView>
+                              <Label prefHeight="17.0" prefWidth="114.0" styleClass="sideBarItem" text="Banned">
+                                 <font>
+                                    <Font name="Bell MT Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </HBox>
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#reportButtonClicked" prefHeight="38.0" prefWidth="176.0" style="-fx-background-color: transparent;" styleClass="sidebarItem" stylesheets="@styles.css">
+                     <font>
+                        <Font name="Bell MT Bold" size="15.0" />
+                     </font>
+                     <graphic>
+                        <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="126.0" styleClass="sidebarItem" stylesheets="@styles.css">
+                           <children>
+                              <ImageView fitHeight="22.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../icon/reporticon.png" />
+                                 </image>
+                              </ImageView>
+                              <Label prefHeight="17.0" prefWidth="114.0" styleClass="sideBarItem" text="Report">
+                                 <font>
+                                    <Font name="Bell MT Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </HBox>
+                     </graphic>
+                  </Button>
+                  <HBox alignment="CENTER" prefHeight="51.0" prefWidth="176.0">
+                     <children>
+                        <ToggleButton mnemonicParsing="false" onAction="#vacationModeClicked" styleClass="reactions-container" stylesheets="@styles.css" text="Vacation" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+   </left>
+   <center>
+      <ScrollPane fx:id="scrollPane" prefHeight="505.0" prefWidth="574.0" BorderPane.alignment="CENTER">
+         <content>
+            <VBox prefHeight="435.0" prefWidth="567.0">
+               <children>
+                  <VBox fx:id="postVbox" alignment="CENTER" prefHeight="203.0" prefWidth="567.0" />
+               </children>
+               <padding>
+                  <Insets right="50.0" />
+               </padding>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </center>
+</BorderPane>

@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<AnchorPane prefHeight="498.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.AdminReportConfessionController">
+   <children>
+      <BorderPane layoutX="112.0" layoutY="59.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <AnchorPane prefHeight="62.0" prefWidth="700.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+               <children>
+                  <Pane layoutX="101.0" layoutY="14.0" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ALICEBLUE;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <HBox layoutX="242.0" layoutY="-17.0" prefHeight="43.0" prefWidth="525.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0" />
+                  <Label fx:id="backMenu" layoutY="23.0" prefHeight="44.0" prefWidth="148.0" text="Meow Confession">
+                     <font>
+                        <Font name="Bradley Hand ITC" size="15.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="38.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icon/confesslogo.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Label>
+                  <Label fx:id="Menu" layoutY="14.0" prefHeight="61.0" prefWidth="169.0" text="Meow Confession">
+                     <font>
+                        <Font name="Bradley Hand ITC" size="15.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="38.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icon/confesslogo.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Label>
+               </children>
+            </AnchorPane>
+         </top>
+         <left>
+            <AnchorPane fx:id="slider" prefHeight="362.0" prefWidth="176.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+               <children>
+                  <VBox layoutX="38.0" layoutY="50.0" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: aliceblue;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#dashboardClicked" prefHeight="38.0" prefWidth="176.0" style="-fx-background-color: transparent;">
+                           <font>
+                              <Font name="Bell MT Bold" size="15.0" />
+                           </font>
+                           <graphic>
+                              <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="126.0" styleClass="sidebarItem" stylesheets="@styles.css">
+                                 <children>
+                                    <ImageView fitHeight="22.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@icon/confessionicon.png" />
+                                       </image>
+                                    </ImageView>
+                                    <Label prefHeight="17.0" prefWidth="114.0" styleClass="sideBarItem" text="Dashboard">
+                                       <font>
+                                          <Font name="Bell MT Bold" size="15.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </HBox>
+                           </graphic>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#confessionButtonClicked" prefHeight="38.0" prefWidth="176.0" style="-fx-background-color: transparent;">
+                           <font>
+                              <Font name="Bell MT Bold" size="15.0" />
+                           </font>
+                           <graphic>
+                              <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="126.0" styleClass="sidebarItem" stylesheets="@styles.css">
+                                 <children>
+                                    <ImageView fitHeight="22.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@icon/usericon.png" />
+                                       </image>
+                                    </ImageView>
+                                    <Label prefHeight="17.0" prefWidth="114.0" styleClass="sideBarItem" text="Confession">
+                                       <font>
+                                          <Font name="Bell MT Bold" size="15.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </HBox>
+                           </graphic>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#bannedButtonClicked" prefHeight="38.0" prefWidth="176.0" style="-fx-background-color: transparent;">
+                           <font>
+                              <Font name="Bell MT Bold" size="15.0" />
+                           </font>
+                           <graphic>
+                              <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="126.0" styleClass="sidebarItem" stylesheets="@styles.css">
+                                 <children>
+                                    <ImageView fitHeight="22.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@icon/banned.png" />
+                                       </image>
+                                    </ImageView>
+                                    <Label prefHeight="17.0" prefWidth="114.0" styleClass="sideBarItem" text="Banned">
+                                       <font>
+                                          <Font name="Bell MT Bold" size="15.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </HBox>
+                           </graphic>
+                        </Button>
+                        <Button mnemonicParsing="false" prefHeight="38.0" prefWidth="176.0" style="-fx-background-color: transparent;">
+                           <font>
+                              <Font name="Bell MT Bold" size="15.0" />
+                           </font>
+                           <graphic>
+                              <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="126.0" styleClass="sidebarItem" stylesheets="@styles.css">
+                                 <children>
+                                    <ImageView fitHeight="22.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@icon/reporticon.png" />
+                                       </image>
+                                    </ImageView>
+                                    <Label prefHeight="17.0" prefWidth="114.0" styleClass="sideBarItem" text="Report">
+                                       <font>
+                                          <Font name="Bell MT Bold" size="15.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </HBox>
+                           </graphic>
+                        </Button>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </left>
+         <center>
+            <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: aliceblue;" BorderPane.alignment="CENTER">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="41.0" prefWidth="524.0" spacing="10.0" style="-fx-background-color: aliceblue;">
+                     <children>
+                        <Label text="Reports" textFill="#08060d">
+                           <font>
+                              <Font name="Bell MT" size="15.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="44.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icon/warning-emoji.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </HBox>
+                  <VBox alignment="CENTER" prefHeight="288.0" prefWidth="574.0" style="-fx-background-color: aliceblue;">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="76.0" prefWidth="574.0" spacing="20.0">
+                           <children>
+                              <Label prefHeight="34.0" prefWidth="82.0" stylesheets="@styles.css" text="  Problems :">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <styleClass>
+                                    <String fx:value="body-background" />
+                                    <String fx:value="dashboard-card" />
+                                 </styleClass>
+                              </Label>
+                              <ComboBox prefHeight="25.0" prefWidth="268.0" styleClass="comboBox" stylesheets="@styles.css" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="76.0" prefWidth="574.0" spacing="20.0">
+                           <children>
+                              <Label prefHeight="34.0" prefWidth="75.0" stylesheets="@styles.css" text="  Reasons :">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <styleClass>
+                                    <String fx:value="body-background" />
+                                    <String fx:value="dashboard-card" />
+                                 </styleClass>
+                              </Label>
+                              <Label fx:id="spell" prefHeight="33.0" prefWidth="271.0" text="Label">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="83.0" prefWidth="574.0">
+                           <children>
+                              <Label prefHeight="32.0" prefWidth="112.0" stylesheets="@styles.css" text="  ID Confession :">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <styleClass>
+                                    <String fx:value="post-background" />
+                                    <String fx:value="dashboard-card" />
+                                 </styleClass>
+                              </Label>
+                              <VBox prefHeight="67.0" prefWidth="26.0" />
+                              <Label fx:id="id" prefHeight="21.0" prefWidth="265.0" text="Label">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="76.0" prefWidth="574.0" spacing="10.0">
+                           <children>
+                              <Label prefHeight="34.0" prefWidth="167.0" stylesheets="@styles.css" text="  Confession Content :" textAlignment="CENTER">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <styleClass>
+                                    <String fx:value="body-background" />
+                                    <String fx:value="dashboard-card" />
+                                 </styleClass>
+                              </Label>
+                              <Label fx:id="confessionContent" prefHeight="43.0" prefWidth="265.0" text="Label">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="59.0" prefWidth="574.0" spacing="10.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#previousClicked" prefHeight="27.0" prefWidth="81.0" stylesheets="@styles.css" text="Previous">
+                                 <styleClass>
+                                    <String fx:value="reactions-container" />
+                                    <String fx:value="body-background" />
+                                 </styleClass>
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Button>
+                              <Button mnemonicParsing="false" onAction="#resolvedClicked" prefHeight="27.0" prefWidth="81.0" stylesheets="@styles.css" text="Resolved">
+                                 <styleClass>
+                                    <String fx:value="reactions-container" />
+                                    <String fx:value="body-background" />
+                                 </styleClass>
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Button>
+                              <Button mnemonicParsing="false" onAction="#rejectClicked" prefHeight="27.0" prefWidth="81.0" stylesheets="@styles.css" text="Reject">
+                                 <styleClass>
+                                    <String fx:value="reactions-container" />
+                                    <String fx:value="body-background" />
+                                 </styleClass>
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Button>
+                              <Button mnemonicParsing="false" onAction="#nextClicked" prefHeight="27.0" prefWidth="81.0" stylesheets="@styles.css" text="Next">
+                                 <styleClass>
+                                    <String fx:value="reactions-container" />
+                                    <String fx:value="body-background" />
+                                 </styleClass>
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>

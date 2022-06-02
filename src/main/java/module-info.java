@@ -5,6 +5,7 @@ module com.example.confesstime {
     requires org.kordamp.bootstrapfx.core;
     requires java.sql;
     requires java.desktop;
+    requires javafx.swing;
 
     opens Program.Confession to javafx.fxml;
     exports Program.Confession;
@@ -14,6 +15,10 @@ module com.example.confesstime {
     opens Program.Compare to javafx.fxml;
     exports Program.Utility;
     opens Program.Utility to javafx.fxml;
-    exports com;
-    opens com to javafx.fxml;
+    exports GUI;
+    opens GUI to javafx.fxml;
+    exports Program.AdminUtility;
+    opens Program.AdminUtility to javafx.fxml;
+    exports Program.Sandbox;
+    opens Program.Sandbox to javafx.fxml;
 }
