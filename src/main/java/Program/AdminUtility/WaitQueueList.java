@@ -1,4 +1,4 @@
-package Program.Utility;
+package Program.AdminUtility;
 
 import Program.Compare.Comparators.EpochCompare;
 import Program.Confession.ConfessionPost;
