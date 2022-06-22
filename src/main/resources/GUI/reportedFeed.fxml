@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane fx:id="anchor" onMousePressed="#click" prefHeight="403.0" prefWidth="426.0" style="-fx-background-color: white;" styleClass="post-background" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.reportedFeedController">
+      <children>
+          <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="400.0" spacing="20.0" styleClass="post-background" stylesheets="@styles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <children>
+                  <HBox alignment="CENTER_LEFT" prefHeight="60.0" style="-fx-background-color: BISQUE;" styleClass="post-background" stylesheets="@styles.css">
+                      <children>
+                          <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                  <Image url="@icon/confesslogo.png" />
+                              </image>
+                          </ImageView>
+                          <VBox prefHeight="60.0" prefWidth="253.0">
+                              <padding>
+                                  <Insets left="5.0" />
+                              </padding>
+                              <children>
+                                  <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                                      <children>
+                                          <Label fx:id="reportedPostID" prefHeight="28.0" prefWidth="135.0">
+                                              <font>
+                                                  <Font name="Book Antiqua" size="15.0" />
+                                              </font>
+                                          </Label>
+                                      </children>
+                                  </HBox>
+                              </children>
+                          </VBox>
+                      </children>
+                      <padding>
+                          <Insets left="20.0" right="20.0" />
+                      </padding>
+                  </HBox>
+                  <VBox prefHeight="415.0" prefWidth="400.0" spacing="10.0">
+                      <children>
+                          <ImageView fx:id="postImage" fitHeight="263.0" fitWidth="361.0" pickOnBounds="true" preserveRatio="true">
+                              <VBox.margin>
+                                  <Insets left="20.0" right="20.0" />
+                              </VBox.margin>
+                          </ImageView>
+                          <Label fx:id="reportedReplyTo" prefHeight="18.0" prefWidth="359.0">
+                              <VBox.margin>
+                                  <Insets left="20.0" />
+                              </VBox.margin>
+                          </Label>
+                          <Label fx:id="reportedPostContent" prefHeight="151.0" prefWidth="606.0">
+                              <VBox.margin>
+                                  <Insets left="20.0" right="20.0" />
+                              </VBox.margin>
+                          </Label>
+                          <Label fx:id="reportedPostPublishedDateTime" prefHeight="30.0" prefWidth="606.0">
+                              <VBox.margin>
+                                  <Insets left="20.0" right="20.0" />
+                              </VBox.margin>
+                          </Label>
+                      </children>
+                      <padding>
+                          <Insets bottom="10.0" left="10.0" right="10.0" />
+                      </padding>
+                  </VBox>
+              </children>
+          </VBox>
+      </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+  </AnchorPane>
