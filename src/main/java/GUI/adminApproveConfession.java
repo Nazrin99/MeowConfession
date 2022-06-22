@@ -84,7 +84,7 @@ public class adminApproveConfession implements Initializable {
                 HBox hBox = new HBox();
 
                 submittedConfessionController itemController = fxmlLoader.getController();
-                itemController.setData(confesses.get(i),myListener);
+                itemController.setData(null ,null);
 
                 if (column == 3) {
                     column = 0;

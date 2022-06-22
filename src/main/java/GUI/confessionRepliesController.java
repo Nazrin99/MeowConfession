@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -31,20 +32,41 @@ public class confessionRepliesController implements Initializable {
     private List<ConfessionPost> confessionPosts = new ArrayList<>();
     private MyListener myListener;
 
-    private List<ConfessionPost> getData() {
-        List<ConfessionPost> confessionPosts = ConfessionPost.initialize();
+    private List<ConfessionPost> getReplies(String confessionID) {
+        ArrayList<ConfessionPost> repliesConfessions = new ArrayList<>();
+        ArrayList<ConfessionPost> allConfessions = ConfessionPost.initialize();
 
-        return confessionPosts;
+        for(int i = 0; i < allConfessions.size(); i++){
+            if(allConfessions.get(i).getReplyToID() != null){
+                if(allConfessions.get(i).getReplyToID().equalsIgnoreCase(confessionID)){
+                    repliesConfessions.add(allConfessions.get(i));
+                }
+            }
+
+        }
+        return repliesConfessions;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        repliesToLabel.setText("");
+        String confessionID = "";
+        try{
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/confession", "root", "MeowConfession");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM runtime");
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()){
+                confessionID = resultSet.getString(4);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        repliesToLabel.setText("Replies for Confession ID: " + confessionID);
         repliesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         repliesScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         repliesVBox.setAlignment(Pos.CENTER);
         repliesVBox.setSpacing(30);
-        confessionPosts.addAll(getData());
+        confessionPosts.addAll(getReplies(confessionID));
         if(confessionPosts.size() > 0){
             myListener = new MyListener() {
                 @Override
@@ -52,6 +74,9 @@ public class confessionRepliesController implements Initializable {
 
                 }
             };
+        }
+        else{
+            repliesToLabel.setText("No replies for Confession Post: " + confessionID + "!");
         }
         try{
             for(int i = 0 ; i < confessionPosts.size(); i++){

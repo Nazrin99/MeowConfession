@@ -1,106 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="592.0" prefWidth="607.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.SubmitConfessionController">
-   <top>
-      <HBox alignment="CENTER_LEFT" prefHeight="73.0" prefWidth="636.0" spacing="20.0" style="-fx-background-color: aliceblue;" styleClass="reactions-container" stylesheets="@styles.css" BorderPane.alignment="CENTER">
-         <children>
-            <ImageView fitHeight="74.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true" styleClass="round-button">
-               <HBox.margin>
-                  <Insets left="20.0" />
-               </HBox.margin>
-               <image>
-                  <Image url="@icon/confesslogo.png" />
-               </image>
-            </ImageView>
-            <Region prefHeight="70.0" prefWidth="28.0" HBox.hgrow="ALWAYS" />
-            <Label prefHeight="42.0" prefWidth="289.0" text="SUBMIT CONFESSIONS">
-               <font>
-                  <Font name="Book Antiqua Bold" size="24.0" />
-               </font>
-            </Label>
-            <Region prefHeight="70.0" prefWidth="129.0" HBox.hgrow="ALWAYS" />
-         </children>
-         <opaqueInsets>
-            <Insets right="20.0" />
-         </opaqueInsets>
-         <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </padding>
-      </HBox>
-   </top>
-   <center>
-      <HBox BorderPane.alignment="CENTER">
-         <children>
-            <Region prefHeight="499.0" prefWidth="126.0" HBox.hgrow="ALWAYS" />
-            <VBox prefHeight="499.0" prefWidth="606.0" spacing="20.0">
+<StackPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.SubmitConfessionController">
+   <children>
+      <BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="592.0" prefWidth="607.0" style="-fx-background-color: white;">
+         <top>
+            <HBox alignment="CENTER_LEFT" prefHeight="73.0" prefWidth="636.0" spacing="20.0" style="-fx-background-color: aliceblue;" styleClass="reactions-container" stylesheets="@styles.css" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" onAction="#goBackButtonClicked" prefHeight="26.0" prefWidth="65.0" text="Back" />
-                  <HBox alignment="BOTTOM_LEFT" spacing="10.0" VBox.vgrow="NEVER">
-                     <children>
-                        <Label prefHeight="18.0" prefWidth="75.0" text="Replying To: " />
-                        <TextField fx:id="replyIDField" />
-                     </children>
-                  </HBox>
-                  <Label fx:id="invalidReplyID" prefHeight="16.0" prefWidth="378.0" textFill="RED">
+                  <ImageView fitHeight="74.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true" styleClass="round-button">
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin>
+                     <image>
+                        <Image url="@icon/confesslogo.png" />
+                     </image>
+                  </ImageView>
+                  <Region prefHeight="70.0" prefWidth="28.0" HBox.hgrow="ALWAYS" />
+                  <Label prefHeight="42.0" prefWidth="289.0" text="SUBMIT CONFESSIONS">
                      <font>
-                        <Font size="13.0" />
+                        <Font name="Book Antiqua Bold" size="24.0" />
                      </font>
                   </Label>
-                  <HBox alignment="CENTER_LEFT" prefHeight="246.0" prefWidth="606.0" spacing="10.0" style="-fx-background-color: white;">
-                     <children>
-                        <TextArea fx:id="confessionContent" prefHeight="120.0" prefWidth="381.0" promptText="Write your confession">
-                           <HBox.margin>
-                              <Insets bottom="20.0" top="20.0" />
-                           </HBox.margin>
-                        </TextArea>
-                        <VBox alignment="CENTER" prefHeight="183.0" prefWidth="114.0">
-                           <children>
-                              <ImageView fx:id="image" fitHeight="43.0" fitWidth="47.0" onMouseClicked="#imageClicked">
-                                 <image>
-                                    <Image url="@icon/picture.png" />
-                                 </image>
-                              </ImageView>
-                           </children>
-                           <HBox.margin>
-                              <Insets bottom="20.0" top="20.0" />
-                           </HBox.margin>
-                        </VBox>
-                     </children>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </HBox>
-                  <HBox alignment="CENTER_LEFT" prefHeight="189.0" prefWidth="606.0" spacing="20.0" style="-fx-background-color: white;" VBox.vgrow="NEVER">
-                     <children>
-                        <VBox prefHeight="170.0" prefWidth="80.0">
-                           <children>
-                              <Label fx:id="imagePreviewLabel" prefHeight="18.0" prefWidth="200.0" />
-                              <ImageView fx:id="imagePreview" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                           </children>
-                        </VBox>
-                        <Region prefHeight="168.0" prefWidth="195.0" HBox.hgrow="NEVER" />
-                        <Button fx:id="submitButton" mnemonicParsing="false" onAction="#submitButtonClicked" prefHeight="34.0" prefWidth="164.0" style="-fx-background-color: bisque;" styleClass="round-button" stylesheets="@styles.css" text="submit" />
-                        <Region prefHeight="168.0" prefWidth="0.0" HBox.hgrow="NEVER" />
-                     </children>
-                     <VBox.margin>
-                        <Insets bottom="30.0" right="30.0" />
-                     </VBox.margin>
-                     <padding>
-                        <Insets right="20.0" />
-                     </padding>
-                  </HBox>
+                  <Region prefHeight="70.0" prefWidth="129.0" HBox.hgrow="ALWAYS" />
                </children>
+               <opaqueInsets>
+                  <Insets right="20.0" />
+               </opaqueInsets>
                <padding>
-                  <Insets left="30.0" top="30.0" />
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
-            </VBox>
-            <Region prefHeight="499.0" prefWidth="2.0" HBox.hgrow="ALWAYS" />
-         </children>
-      </HBox>
-   </center>
-</BorderPane>
+            </HBox>
+         </top>
+         <center>
+            <HBox BorderPane.alignment="CENTER">
+               <children>
+                  <Region prefHeight="499.0" prefWidth="126.0" HBox.hgrow="ALWAYS" />
+                  <VBox prefHeight="499.0" prefWidth="606.0" spacing="20.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#goBackButtonClicked" prefHeight="26.0" prefWidth="65.0" text="Back" />
+                        <HBox alignment="BOTTOM_LEFT" spacing="10.0" VBox.vgrow="NEVER">
+                           <children>
+                              <Label prefHeight="18.0" prefWidth="75.0" text="Replying To: " />
+                              <TextField fx:id="replyIDField" />
+                           </children>
+                        </HBox>
+                        <Label fx:id="invalidReplyID" prefHeight="16.0" prefWidth="378.0" textFill="RED">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <HBox alignment="CENTER_LEFT" prefHeight="246.0" prefWidth="606.0" spacing="10.0" style="-fx-background-color: white;">
+                           <children>
+                              <TextArea fx:id="confessionContent" prefHeight="120.0" prefWidth="381.0" promptText="Write your confession">
+                                 <HBox.margin>
+                                    <Insets bottom="20.0" top="20.0" />
+                                 </HBox.margin>
+                              </TextArea>
+                              <VBox alignment="CENTER" prefHeight="183.0" prefWidth="114.0">
+                                 <children>
+                                    <ImageView fx:id="image" fitHeight="43.0" fitWidth="47.0" onMouseClicked="#imageClicked">
+                                       <image>
+                                          <Image url="@icon/picture.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                                 <HBox.margin>
+                                    <Insets bottom="20.0" top="20.0" />
+                                 </HBox.margin>
+                              </VBox>
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="189.0" prefWidth="606.0" spacing="20.0" style="-fx-background-color: white;" VBox.vgrow="NEVER">
+                           <children>
+                              <VBox prefHeight="170.0" prefWidth="80.0">
+                                 <children>
+                                    <Label fx:id="imagePreviewLabel" prefHeight="18.0" prefWidth="200.0" />
+                                    <ImageView fx:id="imagePreview" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </VBox>
+                              <Region prefHeight="168.0" prefWidth="195.0" HBox.hgrow="NEVER" />
+                              <Button fx:id="submitButton" mnemonicParsing="false" onAction="#submitButtonClicked" prefHeight="34.0" prefWidth="164.0" style="-fx-background-color: bisque;" styleClass="round-button" stylesheets="@styles.css" text="submit" />
+                              <Region prefHeight="168.0" prefWidth="0.0" HBox.hgrow="NEVER" />
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="30.0" right="30.0" />
+                           </VBox.margin>
+                           <padding>
+                              <Insets right="20.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets left="30.0" top="30.0" />
+                     </padding>
+                  </VBox>
+                  <Region prefHeight="499.0" prefWidth="2.0" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+         </center>
+      </BorderPane>
+   </children>
+   <padding>
+      <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+   </padding>
+</StackPane>

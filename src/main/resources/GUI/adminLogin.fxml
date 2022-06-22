@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.String?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="590.0" prefWidth="681.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.adminLoginController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="590.0" prefWidth="681.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.adminLoginController">
    <top>
       <HBox alignment="CENTER_LEFT" prefHeight="124.0" prefWidth="681.0" spacing="20.0" style="-fx-background-color: #071836;" styleClass="body-background" stylesheets="@styles.css" BorderPane.alignment="CENTER">
          <children>
@@ -89,7 +89,6 @@
                   <HBox alignment="CENTER" prefHeight="106.0" prefWidth="641.0" spacing="10.0" stylesheets="@styles.css">
                      <children>
                         <Button mnemonicParsing="false" onAction="#loginButtonClicked" prefHeight="35.0" prefWidth="76.0" styleClass="post-background" stylesheets="@styles.css" text="Login" />
-                        <Button mnemonicParsing="false" onAction="#registerButtonClicked" prefHeight="35.0" prefWidth="76.0" styleClass="post-background" stylesheets="@styles.css" text="Register" />
                      </children>
                      <opaqueInsets>
                         <Insets />

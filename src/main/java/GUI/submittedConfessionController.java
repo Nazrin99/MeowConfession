@@ -1,32 +1,34 @@
 package GUI;
 
-import Program.Confession.ConfessionPost;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
-public class submittedConfessionController {
-    @FXML
-    private Label nameLabel;
-
-    @FXML
-    private Label priceLable;
+public class submittedConfessionController{
 
     @FXML
-    private ImageView img;
+    private Label submissionLabel;
 
     @FXML
-    private void click(MouseEvent mouseEvent) {
-        myListener.onClickListener(confessionPost);
+    private Label mainLabel;
+
+    @FXML
+    void click(MouseEvent event) {
+
     }
 
-    private ConfessionPost confessionPost;
-    private MyListener myListener;
+    @FXML
+    void thankYouButtonClicked(ActionEvent event) {
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.close();
+    }
 
-    public void setData(ConfessionPost confessionPost, MyListener myListener) {
-        this.confessionPost = confessionPost;
-        this.myListener = myListener;
-        nameLabel.setText(confessionPost.getConfessionID());
+    public void setData(String interfaceLabel, String content){
+        mainLabel.setText(interfaceLabel);
+        submissionLabel.setText(content);
+        submissionLabel.setWrapText(true);
     }
 }

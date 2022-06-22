@@ -1,8 +1,10 @@
 package GUI;
 
+import Program.AdminUtility.SpamChecking;
 import Program.AdminUtility.WaitQueueList;
 import Program.Confession.ConfessionPost;
 import Program.Utility.ImageFetch_Store;
+import Program.Utility.SentimentAnalysis;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -19,13 +21,16 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class SubmitConfessionController implements Initializable {
@@ -50,6 +55,7 @@ public class SubmitConfessionController implements Initializable {
     Parent root;
     Scene scene;
     String url = null;
+    WaitQueueList waitQueueList;
 
     EventHandler<MouseEvent> addImageButtonListener= new EventHandler<MouseEvent>(){
 
@@ -72,6 +78,15 @@ public class SubmitConfessionController implements Initializable {
             File file = fileChooser.showOpenDialog(null);
             if(file != null){
                 url = file.getAbsolutePath();
+                System.out.println(url);
+                Image toPreview = null;
+                try {
+                    toPreview = new Image(new FileInputStream(url));
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+                ImageView temp = new ImageView(toPreview);
+                imagePreview = temp;
             }
             else{
                 url = null;
@@ -82,13 +97,19 @@ public class SubmitConfessionController implements Initializable {
 
     @FXML
     void goBackButtonClicked(ActionEvent event) throws IOException {
+        try{
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/confession", "root", "MeowConfession");
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE runtime SET replyingTo = ?");
+            preparedStatement.setString(1, "");
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         root = FXMLLoader.load(getClass().getResource("userPost.fxml"));
         stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 1400, 700);
-        stage.setScene(scene);
-        stage.setMaximized(true);
-        stage.setTitle("Submit Confession Interface");
-        stage.show();
+        stage.close();
     }
 
     @FXML
@@ -98,60 +119,450 @@ public class SubmitConfessionController implements Initializable {
         }
         else{
             Image toPreview = new Image(new FileInputStream(url));
-            ImageView temp = new ImageView(toPreview);
-            imagePreview = temp;
+            imagePreview.setImage(toPreview);
         }
     }
 
     @FXML
-    void submitButtonClicked(ActionEvent event) {
+    void submitButtonClicked(ActionEvent event) throws IOException {
+        //Check if the user can submit confession
+
         String replyToID = replyIDField.getText().trim();
         String confessionContent = this.confessionContent.getText().trim();
         String pathToImage = this.url;
         ConfessionPost confessionPost = new ConfessionPost(confessionContent);
+        SentimentAnalysis sentimentAnalysis = new SentimentAnalysis();
+        sentimentAnalysis.initialize();
 
         if(replyToID == null || replyToID.isEmpty()){
             //Not replying to any confession post
-            try{
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/confession", "root", "MeowConfession");
-                PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO waitinglist VALUES(?,?,?,?,?,?)");
-                preparedStatement.setString(1, confessionPost.getConfessionID());
-                preparedStatement.setString(2, confessionPost.getConfessionContent());
-                preparedStatement.setString(3, confessionPost.getPublishedDate());
-                preparedStatement.setString(4, confessionPost.getPublishedTime());
-                preparedStatement.setString(5, null);
-                if(pathToImage == null || pathToImage.isEmpty()){
-                    preparedStatement.setBytes(6, null);
+            ConfessionPost insertWQList = new ConfessionPost(confessionPost.getConfessionID(), confessionContent, confessionPost.getPublishedDate(), confessionPost.getPublishedTime(), "", ImageFetch_Store.convertImageToByte(pathToImage));
+            if(sentimentAnalysis.obscenityFound(insertWQList)){
+                String user = "";
+                int offensesCount = 0, isBanned = 0;
+                String label = "! OBSCENITY FOUND !";
+                String content = "Obscenity has been found within this confession and will not accepted. Please refrain from using bad words or you will be banned from submitting";
+
+                //Increment users offenses count;
+                try{
+                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/confession", "root", "MeowConfession");
+                    PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM runtime");
+                    PreparedStatement preparedStatement1 = connection.prepareStatement("UPDATE runtime SET offensesCount = ?, isBanned = ?");
+                    PreparedStatement preparedStatement2 = connection.prepareStatement("UPDATE userlogindata SET offensesCount = ?, isBanned = ? WHERE username = ?");
+                    ResultSet resultSet = preparedStatement.executeQuery();
+
+                    while(resultSet.next()){
+                        user = resultSet.getString(1);
+                        offensesCount = resultSet.getInt(6);
+                        isBanned = resultSet.getInt(7);
+                    }
+                    offensesCount += 1;
+                    if(offensesCount >= 5){
+                        isBanned = 1;
+                    }
+                    resultSet.close();
+                    preparedStatement.close();
+                    preparedStatement1.setInt(1, offensesCount);
+                    preparedStatement1.setInt(2, isBanned);
+                    preparedStatement1.execute();
+                    preparedStatement1.close();
+
+                    preparedStatement2.setInt(1, offensesCount);
+                    preparedStatement2.setInt(2, isBanned);
+                    preparedStatement2.setString(3, user);
+                    preparedStatement2.execute();
+                    preparedStatement2.close();
+                    connection.close();
+
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
                 }
-                else{
-                    preparedStatement.setBytes(6, ImageFetch_Store.convertImageToByte(pathToImage));
-                }
-                preparedStatement.execute();
-                preparedStatement.close();
-                connection.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(getClass().getResource("submittedConfession.fxml"));
+                root = fxmlLoader.load();
+                submittedConfessionController submittedConfessionController = fxmlLoader.getController();
+                submittedConfessionController.setData(label ,content);
+
+                scene = new Scene(root);
+                stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+                Stage newStage = new Stage();
+                newStage.setScene(scene);
+                newStage.setTitle(label);
+                newStage.initModality(Modality.WINDOW_MODAL);
+                newStage.initOwner(stage);
+                newStage.show();
             }
+            else if(sentimentAnalysis.checkCaps(insertWQList)){
+                String user = "";
+                int offensesCount = 0, isBanned = 0;
+                String label = "! MANY CAPS DETECTED !";
+                String content = "Unfortunately, more than half of your post contains capital letters. Please adjust your post accordingly or you will be banned from posting!";
+
+                //Increment users offenses count;
+                try{
+                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/confession", "root", "MeowConfession");
+                    PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM runtime");
+                    PreparedStatement preparedStatement1 = connection.prepareStatement("UPDATE runtime SET offensesCount = ?, isBanned = ?");
+                    PreparedStatement preparedStatement2 = connection.prepareStatement("UPDATE userlogindata SET offensesCount = ?, isBanned = ? WHERE username = ?");
+                    ResultSet resultSet = preparedStatement.executeQuery();
+
+                    while(resultSet.next()){
+                        user = resultSet.getString(1);
+                        offensesCount = resultSet.getInt(6);
+                        isBanned = resultSet.getInt(7);
+                    }
+                    offensesCount += 1;
+                    if(offensesCount >= 5){
+                        isBanned = 1;
+                    }
+                    resultSet.close();
+                    preparedStatement.close();
+                    preparedStatement1.setInt(1, offensesCount);
+                    preparedStatement1.setInt(2, isBanned);
+                    preparedStatement1.execute();
+                    preparedStatement1.close();
+
+                    preparedStatement2.setInt(1, offensesCount);
+                    preparedStatement2.setInt(2, isBanned);
+                    preparedStatement2.setString(3, user);
+                    preparedStatement2.execute();
+                    preparedStatement2.close();
+                    connection.close();
+
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(getClass().getResource("submittedConfession.fxml"));
+                root = fxmlLoader.load();
+                submittedConfessionController submittedConfessionController = fxmlLoader.getController();
+                submittedConfessionController.setData(label ,content);
+
+                scene = new Scene(root);
+                stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+                Stage newStage = new Stage();
+                newStage.setScene(scene);
+                newStage.setTitle(label);
+                newStage.initModality(Modality.WINDOW_MODAL);
+                newStage.initOwner(stage);
+                newStage.show();
+            }
+            else if(SpamChecking.checkForRepetitiveContent(insertWQList)){
+                ArrayList<String> similarPostIDs = SpamChecking.obtainSimilarPostsID(insertWQList);
+                //Is a repeated post
+                String label = "! SPAM DETECTED !";
+                String content = "Unfortunately, your confession post's content has a very high similarity index with a" +
+                        "number of other posts. Please modify your post's content accordingly" +
+                        "\n\nConfession IDs with similar content:" +
+                        "\n========================================";
+                for(int i = 0; i < 5; i++){
+                    content += ("\nConfession ID: " + similarPostIDs.get(i));
+                }
+
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(getClass().getResource("submittedConfession.fxml"));
+                root = fxmlLoader.load();
+                submittedConfessionController submittedConfessionController = fxmlLoader.getController();
+                submittedConfessionController.setData(label ,content);
+
+                scene = new Scene(root);
+                stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+                Stage newStage = new Stage();
+                newStage.setScene(scene);
+                newStage.setTitle(label);
+                newStage.initModality(Modality.WINDOW_MODAL);
+                newStage.initOwner(stage);
+                newStage.show();
+
+
+            }
+            else if(!(SpamChecking.validTimeInterval(insertWQList))){
+                //Is a common post
+                String label = "! SPAM DETECTED !";
+                String content = "Unfortunately, another confession post with similar content was posted a short while ago. Please try submitting again later!";
+
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(getClass().getResource("submittedConfession.fxml"));
+                root = fxmlLoader.load();
+                submittedConfessionController submittedConfessionController = fxmlLoader.getController();
+                submittedConfessionController.setData(label ,content);
+
+                scene = new Scene(root);
+                stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+                Stage newStage = new Stage();
+                newStage.setScene(scene);
+                newStage.setTitle(label);
+                newStage.initModality(Modality.WINDOW_MODAL);
+                newStage.initOwner(stage);
+                newStage.show();
+            }
+            else if(!(SpamChecking.meaningFull(insertWQList))){
+                //Post content is meaningless
+                String label = "! SPAM DETECTED !";
+                String content = "Unfortunately, your confession post contains a considerable amount of meaningless phrase! Please adjust your wordings and try again later";
+
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(getClass().getResource("submittedConfession.fxml"));
+                root = fxmlLoader.load();
+                submittedConfessionController submittedConfessionController = fxmlLoader.getController();
+                submittedConfessionController.setData(label ,content);
+
+                scene = new Scene(root);
+                stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+                Stage newStage = new Stage();
+                newStage.setScene(scene);
+                newStage.setTitle(label);
+                newStage.initModality(Modality.WINDOW_MODAL);
+                newStage.initOwner(stage);
+                newStage.show();
+            }
+            else{
+                //Not a spam, store and display confirmation window
+                WaitQueueList.storeHeldConfession(insertWQList);
+
+                String label = "Confession Submitted";
+                String content = "Thank you for your submission! Your confession have been received and will be displayed shortly." +
+                        "\n\nConfession Post Detail:" +
+                        "\n--------------------------" +
+                        "\nConfession ID: " + insertWQList.getConfessionID() +
+                        "\nSubmission Date: " + insertWQList.getPublishedDate() +
+                        "\nSubmission Time: " + insertWQList.getPublishedTime() +
+                        "\nReplying to: " + ((insertWQList.getReplyToID() == null || insertWQList.getReplyToID().isEmpty()) ? "None" : insertWQList.getReplyToID());
+
+
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(getClass().getResource("submittedConfession.fxml"));
+                root = fxmlLoader.load();
+                submittedConfessionController submittedConfessionController = fxmlLoader.getController();
+                submittedConfessionController.setData(label ,content);
+
+                scene = new Scene(root);
+                stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+                Stage newStage = new Stage();
+                newStage.setScene(scene);
+                newStage.setTitle(label);
+                newStage.initModality(Modality.WINDOW_MODAL);
+                newStage.initOwner(stage);
+                newStage.show();
+
+            }
+
         }
         else if(WaitQueueList.destinationConfessionExist(replyToID)){
             //Destination confession ID exists
+            ConfessionPost insertWQList = new ConfessionPost(confessionPost.getConfessionID(), confessionContent, confessionPost.getPublishedDate(), confessionPost.getPublishedTime(), "", ImageFetch_Store.convertImageToByte(pathToImage));
+            if(sentimentAnalysis.obscenityFound(insertWQList)){
+                String user = "";
+                int offensesCount = 0, isBanned = 0;
+                String label = "! OBSCENITY FOUND !";
+                String content = "Obscenity has been found within this confession and will not accepted. Please refrain from using bad words or you will be banned from submitting";
 
-            try{
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/confession", "root", "MeowConfession");
-                PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO waitinglist VALUES(?,?,?,?,?,?)");
-                preparedStatement.setString(1, confessionPost.getConfessionID());
-                preparedStatement.setString(2, confessionPost.getConfessionContent());
-                preparedStatement.setString(3, confessionPost.getPublishedDate());
-                preparedStatement.setString(4, confessionPost.getPublishedTime());
-                preparedStatement.setString(5, replyToID);
-                preparedStatement.setString(6, pathToImage);
-                preparedStatement.execute();
-                preparedStatement.close();
-                connection.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+                //Increment users offenses count;
+                try{
+                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/confession", "root", "MeowConfession");
+                    PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM runtime");
+                    PreparedStatement preparedStatement1 = connection.prepareStatement("UPDATE runtime SET offensesCount = ?, isBanned = ?");
+                    PreparedStatement preparedStatement2 = connection.prepareStatement("UPDATE userlogindata SET offensesCount = ?, isBanned = ? WHERE username = ?");
+                    ResultSet resultSet = preparedStatement.executeQuery();
+
+                    while(resultSet.next()){
+                        user = resultSet.getString(1);
+                        offensesCount = resultSet.getInt(6);
+                        isBanned = resultSet.getInt(7);
+                    }
+                    offensesCount += 1;
+                    if(offensesCount >= 5){
+                        isBanned = 1;
+                    }
+                    resultSet.close();
+                    preparedStatement.close();
+                    preparedStatement1.setInt(1, offensesCount);
+                    preparedStatement1.setInt(2, isBanned);
+                    preparedStatement1.execute();
+                    preparedStatement1.close();
+
+                    preparedStatement2.setInt(1, offensesCount);
+                    preparedStatement2.setInt(2, isBanned);
+                    preparedStatement2.setString(3, user);
+                    preparedStatement2.execute();
+                    preparedStatement2.close();
+                    connection.close();
+
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(getClass().getResource("submittedConfession.fxml"));
+                root = fxmlLoader.load();
+                submittedConfessionController submittedConfessionController = fxmlLoader.getController();
+                submittedConfessionController.setData(label ,content);
+
+                scene = new Scene(root);
+                stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+                Stage newStage = new Stage();
+                newStage.setScene(scene);
+                newStage.setTitle(label);
+                newStage.initModality(Modality.WINDOW_MODAL);
+                newStage.initOwner(stage);
+                newStage.show();
+            }
+            else if(!(sentimentAnalysis.checkCaps(insertWQList))){
+                String user = "";
+                int offensesCount = 0, isBanned = 0;
+                String label = "! MANY CAPS DETECTED !";
+                String content = "Unfortunately, more than half of your post contains capital letters. Please adjust your post accordingly or you will be banned form posting!";
+
+                //Increment users offenses count;
+                try{
+                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/confession", "root", "MeowConfession");
+                    PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM runtime");
+                    PreparedStatement preparedStatement1 = connection.prepareStatement("UPDATE runtime SET offensesCount = ?, isBanned = ?");
+                    PreparedStatement preparedStatement2 = connection.prepareStatement("UPDATE userlogindata SET offensesCount = ?, isBanned = ? WHERE username = ?");
+                    ResultSet resultSet = preparedStatement.executeQuery();
+
+                    while(resultSet.next()){
+                        user = resultSet.getString(1);
+                        offensesCount = resultSet.getInt(6);
+                        isBanned = resultSet.getInt(7);
+                    }
+                    offensesCount += 1;
+                    if(offensesCount >= 5){
+                        isBanned = 1;
+                    }
+                    resultSet.close();
+                    preparedStatement.close();
+                    preparedStatement1.setInt(1, offensesCount);
+                    preparedStatement1.setInt(2, isBanned);
+                    preparedStatement1.execute();
+                    preparedStatement1.close();
+
+                    preparedStatement2.setInt(1, offensesCount);
+                    preparedStatement2.setInt(2, isBanned);
+                    preparedStatement2.setString(3, user);
+                    preparedStatement2.execute();
+                    preparedStatement2.close();
+                    connection.close();
+
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(getClass().getResource("submittedConfession.fxml"));
+                root = fxmlLoader.load();
+                submittedConfessionController submittedConfessionController = fxmlLoader.getController();
+                submittedConfessionController.setData(label ,content);
+
+                scene = new Scene(root);
+                stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+                Stage newStage = new Stage();
+                newStage.setScene(scene);
+                newStage.setTitle(label);
+                newStage.initModality(Modality.WINDOW_MODAL);
+                newStage.initOwner(stage);
+                newStage.show();
+            }
+            else if(SpamChecking.checkForRepetitiveContent(insertWQList)){
+                ArrayList<String> similarPostIDs = SpamChecking.obtainSimilarPostsID(insertWQList);
+                //Is a repeated post
+                String label = "! SPAM DETECTED !";
+                String content = "Unfortunately, your confession post's content has a very high similarity index with a" +
+                        "number of other posts. Please modify your post's content accordingly" +
+                        "\n\nConfession IDs with similar content:" +
+                        "\n========================================";
+                for(int i = 0; i < 5; i++){
+                    content += ("\nConfession ID: " + similarPostIDs.get(i));
+                }
+
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(getClass().getResource("submittedConfession.fxml"));
+                root = fxmlLoader.load();
+                submittedConfessionController submittedConfessionController = fxmlLoader.getController();
+                submittedConfessionController.setData(label ,content);
+
+                scene = new Scene(root);
+                stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+                Stage newStage = new Stage();
+                newStage.setScene(scene);
+                newStage.setTitle(label);
+                newStage.initModality(Modality.WINDOW_MODAL);
+                newStage.initOwner(stage);
+                newStage.show();
+
+
+            }
+            else if(!(SpamChecking.validTimeInterval(insertWQList))){
+                //Is a common post
+                String label = "! SPAM DETECTED !";
+                String content = "Unfortunately, another confession post with similar content was posted a short while ago. Please try submitting again later!";
+
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(getClass().getResource("submittedConfession.fxml"));
+                root = fxmlLoader.load();
+                submittedConfessionController submittedConfessionController = fxmlLoader.getController();
+                submittedConfessionController.setData(label ,content);
+
+                scene = new Scene(root);
+                stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+                Stage newStage = new Stage();
+                newStage.setScene(scene);
+                newStage.setTitle(label);
+                newStage.initModality(Modality.WINDOW_MODAL);
+                newStage.initOwner(stage);
+                newStage.show();
+            }
+            else if(!(SpamChecking.meaningFull(insertWQList))){
+                //Post content is meaningless
+                String label = "! SPAM DETECTED !";
+                String content = "Unfortunately, your confession post contains a considerable amount of meaningless phrase! Please adjust your wordings and try again later";
+
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(getClass().getResource("submittedConfession.fxml"));
+                root = fxmlLoader.load();
+                submittedConfessionController submittedConfessionController = fxmlLoader.getController();
+                submittedConfessionController.setData(label ,content);
+
+                scene = new Scene(root);
+                stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+                Stage newStage = new Stage();
+                newStage.setScene(scene);
+                newStage.setTitle(label);
+                newStage.initModality(Modality.WINDOW_MODAL);
+                newStage.initOwner(stage);
+                newStage.show();
+            }
+            else{
+                //Not a spam, store and display confirmation window
+                WaitQueueList.storeHeldConfession(insertWQList);
+
+                String label = "Confession Submitted";
+                String content = "Thank you for your submission! Your confession have been received and will be displayed shortly." +
+                        "\n\nConfession Post Detail:" +
+                        "\n--------------------------" +
+                        "\nConfession ID: " + insertWQList.getConfessionID() +
+                        "\nSubmission Date: " + insertWQList.getPublishedDate() +
+                        "\nSubmission Time: " + insertWQList.getPublishedTime() +
+                        "\nReplying to: " + ((insertWQList.getReplyToID() == null || insertWQList.getReplyToID().isEmpty()) ? "None" : insertWQList.getReplyToID());
+
+
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(getClass().getResource("submittedConfession.fxml"));
+                root = fxmlLoader.load();
+                submittedConfessionController submittedConfessionController = fxmlLoader.getController();
+                submittedConfessionController.setData(label ,content);
+
+                scene = new Scene(root);
+                stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+                Stage newStage = new Stage();
+                newStage.setScene(scene);
+                newStage.setTitle(label);
+                newStage.initModality(Modality.WINDOW_MODAL);
+                newStage.initOwner(stage);
+                newStage.show();
+
             }
         }
         else{

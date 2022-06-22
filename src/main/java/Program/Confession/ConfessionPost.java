@@ -10,7 +10,10 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Locale;
+import java.util.Scanner;
 
 public class ConfessionPost {
     private String confessionID;
@@ -63,6 +66,7 @@ public class ConfessionPost {
         this.confessionContent = confessionContent;
         this.replyToID = replyToID;
         this.postImage = postImage;
+        findGreatestID(confessionID);
     }
 
     public String getConfessionID() {
@@ -360,30 +364,100 @@ public class ConfessionPost {
     }
 
     //Batch removal method start
-    public static void deleteConfession(String confessionID, ArrayList<ConfessionPost> confessionPostArrayList) {
-        ConfessionPost toDelete = null;
+    public static void deleteConfession(String confessionID){
+        String repliesFrom = "";
 
-        for (int i = 0; i < confessionPostArrayList.size(); i++) {
-            if (confessionPostArrayList.get(i).getConfessionID().equalsIgnoreCase(confessionID)) {
-                toDelete = confessionPostArrayList.get(i);
-                break;
+        try{
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/confession", "root", "MeowConfession");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM confessionposts WHERE confessionID = ?");
+            preparedStatement.setString(1, confessionID);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()){
+                repliesFrom = resultSet.getString("repliesFrom");
+            }
+            preparedStatement.close();
+            connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        if(repliesFrom.isEmpty()){
+            //No posts replying to this ID, so we will remove this confession from the database
+            deleteConfessionFromDB(confessionID);
+        }
+        else{
+            deleteConfessionFromDB(confessionID);
+            //Construct all the IDs from the compound string
+            String[] replyingIDs = new String[repliesFrom.length()/7];
+            for(int i = 0; i < repliesFrom.length()/7; i++){
+                replyingIDs[i] = repliesFrom.substring(7*i, 7*(i+1));
+            }
+
+            //After getting all the reply IDs, we call on the method again
+            for(int j = 0; j < replyingIDs.length; j++){
+                deleteConfession(replyingIDs[j]);
             }
         }
+    }
 
-        if (toDelete == null) {
-            System.out.println("Confession post to delete doesnt exist!");
-            throw new NoSuchElementException();
+    public static void removeReplyToPointingInDB(String confessionID){
+        String replyToID = "";
+        try{
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/confession", "root", "MeowConfession");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM confessionposts WHERE confessionID = ?");
+            preparedStatement.setString(1, confessionID);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()){
+                replyToID = resultSet.getString(5);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-
-        while (toDelete.getRepliesFrom().size() != 0) {
-            deleteConfession(toDelete.getRepliesFrom().get(0).getConfessionID(), confessionPostArrayList);
-            toDelete.getRepliesFrom().remove(toDelete.getRepliesFrom().get(0));
+        if(replyToID.isEmpty()){
+            return;
         }
+        else{
+            String repliesFromFromTop = "";
+            //This confession posts is replying other post
+            try{
+                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/confession", "root", "MeowConfession");
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM confessionposts WHERE confessionID = ?");
+                PreparedStatement preparedStatement1 = connection.prepareStatement("UPDATE confessionposts SET repliesFrom = ? WHERE confessionID = ?");
+                preparedStatement.setString(1, replyToID);
+                ResultSet resultSet = preparedStatement.executeQuery();
 
-        //Confession post does not receive any repliesFrom other confession posts
-        toDelete.setReplyTo(null);
-        confessionPostArrayList.remove(toDelete);
+                while(resultSet.next()){
+                    repliesFromFromTop = resultSet.getString(6);
+                }
+                resultSet.close();
+                preparedStatement.close();
 
+                repliesFromFromTop = repliesFromFromTop.replaceAll(confessionID, "");
+                preparedStatement1.setString(1, repliesFromFromTop);
+                preparedStatement1.setString(2, replyToID);
+                preparedStatement1.executeUpdate();
+                preparedStatement1.close();
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+    }
+
+    public static void deleteConfessionFromDB(String confessionID){
+        try{
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/confession", "root", "MeowConfession");
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM confessionposts WHERE confessionID = ?");
+            preparedStatement.setString(1, confessionID);
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void viewCurrentConfessions(ArrayList<ConfessionPost> confessionPostArrayList) {
@@ -395,8 +469,6 @@ public class ConfessionPost {
     public static ConfessionPost searchConfessionByID(String confessionID, ArrayList<ConfessionPost> confessionPostArrayList) {
         for (int i = 0; i < confessionPostArrayList.size(); i++) {
             if (confessionPostArrayList.get(i).getConfessionID().equalsIgnoreCase(confessionID)) {
-                System.out.println("Confession post found!");
-                System.out.println(confessionPostArrayList.get(i).toString());
                 return confessionPostArrayList.get(i);
             }
         }
@@ -511,6 +583,22 @@ public class ConfessionPost {
             System.out.println("Time are not in the correct format!");
             return new ArrayList<>();
         }
+    }
+
+    public static ArrayList<ConfessionPost> getSubmittedConfession(){
+        ArrayList<ConfessionPost> toReturn = new ArrayList<>();
+        try{
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/confession", "root", "MeowConfession");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM waitinglist");
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()){
+                toReturn.add(new ConfessionPost(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4), resultSet.getString(5), resultSet.getBytes(6)));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return toReturn;
     }
 
     public static void searchConfessionPostInterface(ArrayList<ConfessionPost> confessionPostArrayList) {

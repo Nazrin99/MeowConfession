@@ -5,7 +5,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1015.0" prefWidth="1067.0" style="-fx-background-color: ghostwhite;" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.PostController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="660.0" prefWidth="785.0" style="-fx-background-color: ghostwhite;" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.PostController">
    <top>
       <HBox alignment="CENTER_LEFT" prefHeight="85.0" prefWidth="717.0" spacing="20.0" style="-fx-background-color: LIGHTSTEELBLUE;" BorderPane.alignment="CENTER">
          <children>
@@ -14,7 +14,21 @@
                   <Image url="@icon/confesslogo.png" />
                </image>
             </ImageView>
-            <Button mnemonicParsing="false" prefHeight="29.0" prefWidth="30.0" styleClass="post-background" stylesheets="@styles.css">
+            <HBox alignment="CENTER" prefHeight="86.0" prefWidth="158.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#homeButtonClicked" prefHeight="46.0" prefWidth="30.0">
+                     <graphic>
+                        <ImageView fitHeight="35.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icon/home.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </HBox>
+            <Region prefHeight="86.0" prefWidth="156.0" HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#searchButtonClicked" prefHeight="29.0" prefWidth="30.0" styleClass="post-background" stylesheets="@styles.css">
                <graphic>
                   <ImageView fitHeight="37.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -23,29 +37,8 @@
                   </ImageView>
                </graphic>
             </Button>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <ImageView fitHeight="53.0" fitWidth="59.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@icon/home.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </HBox>
-            <Button mnemonicParsing="false" onAction="#reportButtonClicked" prefHeight="52.0" prefWidth="59.0" styleClass="post-background" stylesheets="@styles.css">
-               <graphic>
-                  <ImageView fitHeight="49.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@icon/report-card.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
-            <Label fx:id="loggedUser" prefHeight="43.0" prefWidth="119.0">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
+            <TextField fx:id="searchField" prefHeight="46.0" prefWidth="421.0" promptText="ID:&quot;#UM&quot; or  Date:&quot;dd.MM.yyyy&quot; or Time:&quot;HH:mm:ss&quot;" />
+            <Region prefHeight="86.0" prefWidth="128.0" HBox.hgrow="ALWAYS" />
          </children>
          <BorderPane.margin>
             <Insets />
@@ -56,7 +49,7 @@
       </HBox>
    </top>
    <left>
-      <ScrollPane prefHeight="930.0" prefWidth="320.0" style="-fx-background-color: vb;" BorderPane.alignment="CENTER">
+      <ScrollPane prefHeight="866.0" prefWidth="320.0" style="-fx-background-color: vb;" BorderPane.alignment="CENTER">
          <content>
             <VBox prefHeight="316.0" prefWidth="259.0">
                <children>
@@ -133,7 +126,7 @@
       </ScrollPane>
    </left>
    <center>
-      <VBox prefHeight="930.0" prefWidth="3.0" spacing="40.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="930.0" prefWidth="451.0" spacing="40.0" BorderPane.alignment="CENTER">
          <children>
             <VBox fx:id="postContainer" alignment="TOP_CENTER" prefHeight="173.0" prefWidth="747.0">
                <children>
@@ -181,9 +174,9 @@
             <HBox>
                <children>
                   <Region prefHeight="504.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                  <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" maxWidth="667.0" prefHeight="504.0" prefWidth="667.0" vbarPolicy="NEVER">
+                  <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" maxWidth="667.0" prefHeight="504.0" prefWidth="425.6" vbarPolicy="NEVER">
                      <content>
-                        <VBox fx:id="postVBox" alignment="CENTER" prefHeight="510.0" prefWidth="625.0" style="-fx-background-color: transparent;" />
+                        <VBox fx:id="postVBox" alignment="CENTER" prefHeight="226.0" prefWidth="362.0" style="-fx-background-color: transparent;" />
                      </content>
                   </ScrollPane>
                   <Region prefHeight="504.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />

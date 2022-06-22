@@ -16,10 +16,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ResourceBundle;
 
 public class userLoginController implements Initializable {
@@ -82,12 +79,27 @@ public class userLoginController implements Initializable {
 
     public void userLoginValid(ActionEvent event) throws IOException{
         try{
+            String username = usernameField.getText().trim();
+            int offensesCount = 0, isBanned = 0;
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/confession", "root", "MeowConfession");
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO runtime(currentLoggedUser) VALUES(?)");
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO runtime(currentLoggedUser, offensesCount, isBanned) VALUES(?,?,?)");
             PreparedStatement preparedStatement1 = connection.prepareStatement("DELETE FROM runtime");
+            PreparedStatement preparedStatement2 = connection.prepareStatement("SELECT * FROM userlogindata WHERE username = ?");
+            preparedStatement2.setString(1, username);
+            ResultSet resultSet = preparedStatement2.executeQuery();
+
+            while(resultSet.next()){
+                offensesCount = resultSet.getInt(3);
+                isBanned = resultSet.getInt(4);
+            }
+            resultSet.close();
+            preparedStatement2.close();
+
             preparedStatement1.executeUpdate();
             preparedStatement1.close();
-            preparedStatement.setString(1,usernameField.getText().trim());
+            preparedStatement.setString(1, username);
+            preparedStatement.setInt(2, offensesCount);
+            preparedStatement.setInt(3, isBanned);
             preparedStatement.execute();
             preparedStatement.close();
             connection.close();
@@ -97,7 +109,7 @@ public class userLoginController implements Initializable {
 
         root = FXMLLoader.load(getClass().getResource("userPost.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 1400, 700);
+        scene = new Scene(root,1000, 800);
         stage.setScene(scene);
         stage.setTitle("Meow Confession");
         stage.setMaximized(true);

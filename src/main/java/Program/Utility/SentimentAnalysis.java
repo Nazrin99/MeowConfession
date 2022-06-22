@@ -42,7 +42,7 @@ public class SentimentAnalysis {
         SentimentAnalysis.allowedWords = allowedWords;
     }
 
-    public static int initialize(){
+    public int initialize(){
 
         try{
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/confession", "root", "MeowConfession");
@@ -74,7 +74,9 @@ public class SentimentAnalysis {
         }
 
         for(int i = 0 ; i < allowedWords.size(); i++){
-            obscenities.remove(allowedWords.get(i));
+            if(obscenities.contains(allowedWords.get(i))){
+                obscenities.remove(allowedWords.get(i));
+            }
         }
         return 1;
     }
@@ -83,9 +85,9 @@ public class SentimentAnalysis {
      *
      * @return true when at least one obscenity found, false otherwise
      */
-    public static boolean obscenityFound(ConfessionPost confessionPost){
+    public boolean obscenityFound(ConfessionPost confessionPost){
         for(String obscenity : obscenities){
-            if(confessionPost.getConfessionContent().contains(obscenity)){
+            if(confessionPost.getConfessionContent().toLowerCase().contains(obscenity.toLowerCase())){
                 return true;
             }
         }

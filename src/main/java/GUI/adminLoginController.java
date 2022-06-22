@@ -44,25 +44,12 @@ public class adminLoginController implements Initializable {
     }
 
     @FXML
-    void registerButtonClicked(ActionEvent event) {
-        invalidLabel.setText("");
-        String username = usernameField.getText().trim(), password = passwordField.getText().trim();
-
-        if(Admin.adminRegister(username, password)){
-            adminLoginValid();
-        }
-        else{
-            invalidLabel.setText("** Username already taken! **");
-        }
-    }
-
-    @FXML
-    void loginButtonClicked(ActionEvent event) {
+    void loginButtonClicked(ActionEvent event) throws IOException{
         invalidLabel.setText("");
         String username = usernameField.getText().trim(), password = passwordField.getText().trim();
 
         if(Admin.adminLogin(username, password)){
-            adminLoginValid();
+            adminLoginValid(event);
         }
         else{
             invalidLabel.setText("** Invalid login credentials **");
@@ -75,7 +62,13 @@ public class adminLoginController implements Initializable {
         passwordField.setPromptText("Enter your password here");
     }
 
-    public void adminLoginValid(){
-
+    public void adminLoginValid(ActionEvent event) throws IOException{
+        root = FXMLLoader.load(getClass().getResource("adminDashboard.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root,1000, 800);
+        stage.setScene(scene);
+        stage.setTitle("Welcome Admin " + usernameField.getText().trim());
+        stage.setMaximized(true);
+        stage.show();
     }
 }

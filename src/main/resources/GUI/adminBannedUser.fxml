@@ -151,16 +151,20 @@
                <children>
                   <HBox alignment="CENTER" prefHeight="51.0" prefWidth="469.0" spacing="30.0" style="-fx-background-color: bisque;" styleClass="post-background" stylesheets="@styles.css">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#activeUserClicked" styleClass="dashboard-card" text="Active User" />
-                        <Button mnemonicParsing="false" onAction="#bannedUserClicked" styleClass="dashboard-card" stylesheets="@styles.css" text="Banned User" />
+                        <Label alignment="CENTER" prefHeight="30.0" prefWidth="278.0" text="BANNED USERS" />
                      </children>
                   </HBox>
-                  <TableView prefHeight="394.0" prefWidth="429.0" styleClass="post-background" stylesheets="@styles.css">
-                    <columns>
-                      <TableColumn prefWidth="121.0" text="Username" />
-                      <TableColumn minWidth="0.0" prefWidth="307.0" text="Reported Confession" />
-                    </columns>
-                  </TableView>
+                  <ScrollPane hbarPolicy="NEVER" vbarPolicy="NEVER">
+                     <content>
+                        <TableView prefHeight="406.0" prefWidth="441.0" styleClass="post-background" stylesheets="@styles.css">
+                          <columns>
+                            <TableColumn prefWidth="141.59998780488968" text="Username" />
+                            <TableColumn minWidth="0.0" prefWidth="148.00001525878906" text="Banned Date" />
+                              <TableColumn prefWidth="139.20001220703125" text="Banned Time" />
+                          </columns>
+                        </TableView>
+                     </content>
+                  </ScrollPane>
                </children>
                <padding>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

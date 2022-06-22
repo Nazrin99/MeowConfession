@@ -40,11 +40,7 @@ public class reportFormController implements Initializable {
     void cancelButtonClicked(ActionEvent event) throws IOException {
         root = FXMLLoader.load(getClass().getResource("userPost.fxml"));
         stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root, 1400, 700);
-        stage.setScene(scene);
-        stage.setMaximized(true);
-        stage.setTitle("Submit Confession Interface");
-        stage.show();
+        stage.close();
     }
 
     @FXML
@@ -67,7 +63,7 @@ public class reportFormController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         reportConfirmation.setText("");
-        String[] reportCategories = {"Nudity","Violence", "Harassment", "Terrorism", "Hate Speech"};
+        String[] reportCategories = {"Nudity","Violence", "Harassment", "Terrorism", "Hate Speech", "Blackmail", "Racism"};
 
         for(int i = 0 ; i < reportCategories.length; i++){
             reportCategory.getItems().add(reportCategories[i]);

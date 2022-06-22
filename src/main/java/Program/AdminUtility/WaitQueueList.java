@@ -6,10 +6,8 @@ import Program.Confession.ConfessionPost;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
+import java.util.*;
 
 /**
  * This WaitQueueList will store the necessary methods and implementation to execute our waiting & queueing list
@@ -17,7 +15,22 @@ import java.util.Date;
  *
  *
  */
-public class WaitQueueList {
+public class WaitQueueList extends TimerTask{
+    private static LinkedList<ConfessionPost> submittedPosts = new LinkedList<>();
+    private static Date timeOfNextPop = null;
+    private static Timer timer = new Timer();
+
+    public int getSize(){
+        return submittedPosts.size();
+    }
+
+    public void enqueue(ConfessionPost e){
+        submittedPosts.addLast(e);
+    }
+
+    public ConfessionPost dequeue(){
+        return submittedPosts.removeFirst();
+    }
 
     public static void storeHeldConfession(ConfessionPost confessionPost){
         try {
@@ -28,7 +41,7 @@ public class WaitQueueList {
             preparedStatement.setString(2,confessionPost.getConfessionContent());
             preparedStatement.setString(3,confessionPost.getPublishedDate());
             preparedStatement.setString(4,confessionPost.getPublishedTime());
-            if(confessionPost.getReplyTo() != null || !(confessionPost.getReplyToID().equalsIgnoreCase(""))){
+            if(confessionPost.getReplyToID() != null || !(confessionPost.getReplyToID().isEmpty()) || !(confessionPost.getReplyToID().equalsIgnoreCase(""))){
                 preparedStatement.setString(5, confessionPost.getReplyToID());
             }
             else{
@@ -69,7 +82,8 @@ public class WaitQueueList {
     public static void approveConfession(ConfessionPost approvedPost){
         try{
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/confession", "root", "MeowConfession");
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO confessionposts VALUES(?,?,?,?,?,?)");
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO confessionposts VALUES(?,?,?,?,?,?,?)");
+            PreparedStatement preparedStatement1 = connection.prepareStatement("DELETE FROM waitinglist WHERE confessionID = ?");
 
             preparedStatement.setString(1, approvedPost.getConfessionID());
             preparedStatement.setString(2, approvedPost.getConfessionContent());
@@ -77,9 +91,13 @@ public class WaitQueueList {
             preparedStatement.setString(4, approvedPost.getPublishedTime());
             preparedStatement.setString(5, approvedPost.getReplyToID());
             preparedStatement.setString(6, "");
-
+            preparedStatement.setBytes(7, null);
             preparedStatement.execute();
             preparedStatement.close();
+
+            preparedStatement1.setString(1, approvedPost.getConfessionID());
+            preparedStatement1.executeUpdate();
+            preparedStatement1.close();
             connection.close();
         }
         catch(SQLException e){
@@ -110,62 +128,112 @@ public class WaitQueueList {
         }
     }
 
-    public static void initialize(){
+    public void initialize(){
         ArrayList<ConfessionPost> heldConfession = obtainHeldConfession();
-        ArrayList<ConfessionPost> overdueConfessions = new ArrayList<>();
-
-        //find out which heldConfession is overdue
-        try{
-            Date date1 = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").parse(LocalDateTime.now().toString());
-            Date date2;
-            long seconds;
-
-            for(int i = 0; i < heldConfession.size(); i++){
-                date2 = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").parse(heldConfession.get(i).getPublishedDate() + " " + heldConfession.get(i).getPublishedTime());
-                seconds = (date1.getTime() - date2.getTime())/1000;
-
-                if((int)seconds > 900){
-                    overdueConfessions.add(heldConfession.get(i));
-                }
-            }
+        ArrayList<ConfessionPost> overdueConfessions;
+        try {
+            overdueConfessions = getOverdueConfessions(heldConfession);
         } catch (ParseException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
-        //Insert overdue confession into the published confessions section and assert as "Published by overdue"
-        try{
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/confession", "root", "MeowConfession");
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO confessionposts(confessionID, confessionContent, publishedDate, publishedTime, replyTo) VALUES(?,?,?,?,?)");
-
-            for(int i = 0 ; i < overdueConfessions.size(); i++){
-                preparedStatement.setString(1, overdueConfessions.get(i).getConfessionID());
-                preparedStatement.setString(2, overdueConfessions.get(i).getConfessionContent());
-                preparedStatement.setString(3, overdueConfessions.get(i).getPublishedDate());
-                preparedStatement.setString(4, overdueConfessions.get(i).getPublishedTime());
-                if(overdueConfessions.get(i).getReplyToID() == null || !(overdueConfessions.get(i).getReplyToID().equalsIgnoreCase(""))){
-                    preparedStatement.setString(5, "");
-                }
-                else{
-                    preparedStatement.setString(5, overdueConfessions.get(i).getReplyToID());
-                }
-                preparedStatement.execute();
-            }
-            preparedStatement.close();
-            connection.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+        for(int i = 0; i < overdueConfessions.size(); i++){
+            approveConfession(overdueConfessions.get(i));
         }
+
+        this.run();
     }
 
     public static boolean destinationConfessionExist(String confessionID){
         ArrayList<ConfessionPost> arrayList = Program.Confession.ConfessionPost.initialize();
-
         for(int i = 0; i < arrayList.size(); i++){
             if(arrayList.get(i).getConfessionID().equalsIgnoreCase(confessionID)){
                 return true;
             }
         }
         return false;
+    }
+
+    public static ArrayList<ConfessionPost> getOverdueConfessions(ArrayList<ConfessionPost> submittedConfessions) throws ParseException {
+        ArrayList<ConfessionPost> overdueConfessions = new ArrayList<>();
+        if(submittedConfessions.size() <= 0){
+            Date date = new Date();
+            timeOfNextPop = date;
+            return new ArrayList<>();
+        }
+        //Assume there are confessions, we set the initial timer to be the
+        int count = 0;
+        int size = submittedConfessions.size();
+        int delay = 0;
+
+        if(size > 10){
+            delay = 5;
+        }
+        else if(size > 5){
+            delay = 10;
+        }
+        else{
+            delay = 15;
+        }
+        Date dateNow = new Date();
+        ConfessionPost firstPost = submittedConfessions.get(0);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        String firstPostDateAndTime = firstPost.getPublishedDate() + " " + firstPost.getPublishedTime();
+        Date firstPostDateTime = formatter.parse(firstPostDateAndTime);
+        Calendar c = Calendar.getInstance();
+        c.setTime(firstPostDateTime);
+        c.add(Calendar.MINUTE, delay);
+        timeOfNextPop = c.getTime();
+
+        while(dateNow.getTime() > timeOfNextPop.getTime()) {
+            if(submittedConfessions.size() == 0){
+                break;
+            }
+            ConfessionPost toPop = submittedConfessions.get(0);
+            overdueConfessions.add(toPop);
+            submittedConfessions.remove(toPop);
+
+            if (submittedConfessions.size() > 10) {
+                    c.add(Calendar.MINUTE, 5);
+                    timeOfNextPop = c.getTime();
+            } else if (submittedConfessions.size() > 5) {
+                    c.add(Calendar.MINUTE, 10);
+                    timeOfNextPop = c.getTime();
+            } else {
+                    c.add(Calendar.MINUTE, 15);
+                    timeOfNextPop = c.getTime();
+            }
+        }
+        return overdueConfessions;
+    }
+
+    public Date popConfession(){
+        //Assume that timer is correct
+        int size = submittedPosts.size();
+        ConfessionPost poppedPost = this.dequeue();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(timeOfNextPop);
+        if(submittedPosts.size() > 10){
+            calendar.add(Calendar.MINUTE, 5);
+        }
+        else if(submittedPosts.size() > 5){
+            calendar.add(Calendar.MINUTE, 10);
+        }
+        else{
+            calendar.add(Calendar.MINUTE, 15);
+        }
+        timeOfNextPop = calendar.getTime();
+        return timeOfNextPop;
+    }
+
+    @Override
+    public void run() {
+        if(submittedPosts.size() != 0){
+            popConfession();
+            System.out.println(timeOfNextPop.getTime());
+        }
+        this.timer = new Timer();
+
+        timer.schedule(new WaitQueueList(), timeOfNextPop);
     }
 }

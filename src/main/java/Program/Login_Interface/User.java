@@ -48,9 +48,11 @@ public class User {
                 return false;
             }
             else{
-                PreparedStatement preparedStatement1 = connection.prepareStatement("INSERT INTO userlogindata VALUES(?,?)");
+                PreparedStatement preparedStatement1 = connection.prepareStatement("INSERT INTO userlogindata VALUES(?,?,?,?)");
                 preparedStatement1.setString(1, username);
                 preparedStatement1.setString(2, Hashing.hashedPassword(password));
+                preparedStatement1.setInt(3, 0);
+                preparedStatement1.setInt(4, 0);
                 preparedStatement1.execute();
                 connection.close();
                 return true;
