@@ -5,6 +5,7 @@ import Program.AdminUtility.WaitQueueList;
 import Program.Confession.ConfessionPost;
 import Program.Utility.ImageFetch_Store;
 import Program.Utility.SentimentAnalysis;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -24,9 +25,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
@@ -77,22 +79,21 @@ public class SubmitConfessionController implements Initializable {
             //Show open file dialog
             File file = fileChooser.showOpenDialog(null);
             if(file != null){
+                System.out.println("Entered");
                 url = file.getAbsolutePath();
                 System.out.println(url);
-                Image toPreview = null;
                 try {
-                    toPreview = new Image(new FileInputStream(url));
-                } catch (FileNotFoundException e) {
+                    BufferedImage bufImage = ImageIO.read(new File(url));
+                    Image image = SwingFXUtils.toFXImage(bufImage, null);
+                    imagePreview = new ImageView();
+                    imagePreview.setImage(image);
+                } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                ImageView temp = new ImageView(toPreview);
-                imagePreview = temp;
             }
             else{
                 url = null;
             }
-
-
         }};
 
     @FXML
@@ -545,7 +546,7 @@ public class SubmitConfessionController implements Initializable {
                         "\nConfession ID: " + insertWQList.getConfessionID() +
                         "\nSubmission Date: " + insertWQList.getPublishedDate() +
                         "\nSubmission Time: " + insertWQList.getPublishedTime() +
-                        "\nReplying to: " + ((insertWQList.getReplyToID() == null || insertWQList.getReplyToID().isEmpty()) ? "None" : insertWQList.getReplyToID());
+                        "\nReplying to: " + insertWQList.getReplyToID();
 
 
                 FXMLLoader fxmlLoader = new FXMLLoader();

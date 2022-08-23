@@ -1,6 +1,7 @@
 package GUI;
 
 import Program.Confession.ConfessionPost;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -17,9 +18,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import java.io.FileInputStream;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.sql.*;
+
 
 public class FeedController {
 
@@ -169,11 +173,11 @@ public class FeedController {
     public void setData(ConfessionPost confessionPost, MyListener myListener){
         this.confessionPost = confessionPost;
         this.myListener = myListener;
-        String[] paths = {"C:\\Users\\HUAWEI\\IdeaProjects\\ConfessTime\\src\\main\\resources\\GUI\\buffer\\buffer.png",
-        ""};
         if(confessionPost.getPostImage() != null){
             try{
-                Image newImage = new Image(new FileInputStream("C:\\Users\\HUAWEI\\IdeaProjects\\ConfessTime\\src\\main\\resources\\GUI\\buffer\\buffer.png"));
+                ByteArrayInputStream bais = new ByteArrayInputStream(confessionPost.getPostImage());
+                BufferedImage bufferedImage = ImageIO.read(bais);
+                Image newImage = SwingFXUtils.toFXImage(bufferedImage, null);
                 postImage.setImage(newImage);
             } catch (IOException e) {
                 throw new RuntimeException(e);
